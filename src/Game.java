@@ -153,8 +153,8 @@ public class Game implements Serializable {
                 if (outs == 3) {
                     inning++;
                     outs = 0;
-                    if (inning >= 19 && (score[0] != score[1])) {
-                        finishGame();
+                    if (inning >= 19 && (score[0] != score[1]) && inning % 2 == 1) {
+                        hasFinished = true;
                     }
                     else {
                         if (currentTeamPitchingIndex == 1) {
@@ -328,8 +328,8 @@ public class Game implements Serializable {
         if (outs == 3) {
             inning++;
             outs = 0;
-            if (inning >= 19 && (score[0] != score[1])) {
-                finishGame();
+            if (inning >= 19 && (score[0] != score[1]) && inning % 2 == 1) {
+                hasFinished = true;
             }
             else {
                 if (currentTeamPitchingIndex == 1) {
@@ -673,8 +673,8 @@ public class Game implements Serializable {
         if (outs == 3) {
             inning++;
             outs = 0;
-            if (inning >= 19 && (score[0] != score[1])) {
-                finishGame();
+            if (inning >= 19 && (score[0] != score[1]) && inning % 2 == 1) {
+                hasFinished = true;
             }
             else {
                 if (currentTeamPitchingIndex == 1) {
@@ -747,7 +747,6 @@ public class Game implements Serializable {
     }
 
     public void finishGame() {
-        hasFinished = true;
         inning--; // in order to make the innings not overflow
         gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].setPlateAppearances(
                 gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].getPlateAppearances() - 1);

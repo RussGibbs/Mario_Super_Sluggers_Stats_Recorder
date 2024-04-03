@@ -547,6 +547,20 @@ public class AppFrame extends JFrame implements ActionListener {
             daisyCruiser.setSelected(true);
         }
 
+        if (currentGame.isHasStarted()) {
+            day.setEnabled(false);
+            night.setEnabled(false);
+            marioStadium.setEnabled(false);
+            yoshiPark.setEnabled(false);
+            warioCity.setEnabled(false);
+            dkJungle.setEnabled(false);
+            bjPlayroom.setEnabled(false);
+            bowserCastle.setEnabled(false);
+            luigiMansion.setEnabled(false);
+            peachIceGardens.setEnabled(false);
+            daisyCruiser.setEnabled(false);
+        }
+
         // lower, edit lineups 1 and 2 from rosters
         JPanel lineupsPanel = new JPanel();
         lineupsPanel.setBackground(background);
@@ -758,43 +772,178 @@ public class AppFrame extends JFrame implements ActionListener {
 
             savesPanel.add(new JLabel("Saves: "));
 
+            savesTeam1 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
+                savesTeam1.addItem(currentGame.getLineups().get(0).get(i));
+            }
+            savesTeam1.addItem(null);
+            savesTeam1.setSelectedItem(null);
+
+            savesPanel.add(savesTeam1);
+
+            savesTeam2 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
+                savesTeam2.addItem(currentGame.getLineups().get(1).get(i));
+            }
+            savesTeam2.addItem(null);
+            savesTeam2.setSelectedItem(null);
+
+            savesPanel.add(savesTeam2);
+
             JPanel winsPanel = new JPanel();
             winsPanel.setBackground(background);
             winsPanel.setLayout(new FlowLayout());
             middlePanel.add(winsPanel);
+
+            winsPanel.add(new JLabel("Wins: "));
+
+            winsTeam1 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
+                winsTeam1.addItem(currentGame.getLineups().get(0).get(i));
+            }
+            winsTeam1.addItem(null);
+            winsTeam1.setSelectedItem(null);
+
+            winsPanel.add(winsTeam1);
+
+            winsTeam2 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
+                winsTeam2.addItem(currentGame.getLineups().get(1).get(i));
+            }
+            winsTeam2.addItem(null);
+            winsTeam2.setSelectedItem(null);
+
+            winsPanel.add(winsTeam2);
 
             JPanel lossesPanel = new JPanel();
             lossesPanel.setBackground(background);
             lossesPanel.setLayout(new FlowLayout());
             middlePanel.add(lossesPanel);
 
-            JPanel saveOpportunities = new JPanel();
-            saveOpportunities.setBackground(background);
-            saveOpportunities.setLayout(new FlowLayout());
-            middlePanel.add(saveOpportunities);
+            lossesPanel.add(new JLabel("Losses: "));
+
+            lossesTeam1 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
+                lossesTeam1.addItem(currentGame.getLineups().get(0).get(i));
+            }
+            lossesTeam1.addItem(null);
+            lossesTeam1.setSelectedItem(null);
+
+            lossesPanel.add(lossesTeam1);
+
+            lossesTeam2 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
+                lossesTeam2.addItem(currentGame.getLineups().get(1).get(i));
+            }
+            lossesTeam2.addItem(null);
+            lossesTeam2.setSelectedItem(null);
+
+            lossesPanel.add(lossesTeam2);
+
+            JPanel saveOpportunitiesPanel = new JPanel();
+            saveOpportunitiesPanel.setBackground(background);
+            saveOpportunitiesPanel.setLayout(new FlowLayout());
+            middlePanel.add(saveOpportunitiesPanel);
+
+            saveOpportunitiesPanel.add(new JLabel("Save Opportunities: "));
+
+            saveOpportunitiesTeam1 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
+                saveOpportunitiesTeam1.addItem(currentGame.getLineups().get(0).get(i));
+            }
+            saveOpportunitiesTeam1.addItem(null);
+            saveOpportunitiesTeam1.setSelectedItem(null);
+
+            saveOpportunitiesPanel.add(saveOpportunitiesTeam1);
+
+            saveOpportunitiesTeam2 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
+                saveOpportunitiesTeam2.addItem(currentGame.getLineups().get(1).get(i));
+            }
+            saveOpportunitiesTeam2.addItem(null);
+            saveOpportunitiesTeam2.setSelectedItem(null);
+
+            saveOpportunitiesPanel.add(saveOpportunitiesTeam2);
 
             JPanel holdsPanel = new JPanel();
             holdsPanel.setBackground(background);
             holdsPanel.setLayout(new FlowLayout());
             middlePanel.add(holdsPanel);
 
+            holdsPanel.add(new JLabel("Holds: "));
 
+            holdsTeam1 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
+                holdsTeam1.addItem(currentGame.getLineups().get(0).get(i));
+            }
+            holdsTeam1.addItem(null);
+            holdsTeam1.setSelectedItem(null);
 
+            holdsPanel.add(holdsTeam1);
 
+            holdsTeam2 = new JComboBox<>();
+            for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
+                holdsTeam2.addItem(currentGame.getLineups().get(1).get(i));
+            }
+            holdsTeam2.addItem(null);
+            holdsTeam2.setSelectedItem(null);
 
-            /*save;
-            win;
-            loss;
-            saveOpportunity;
-            hold;*/
-
+            holdsPanel.add(holdsTeam2);
 
             add(mainPanel);
             setVisible(true);
         }
     }
 
-    public void saveGameClose() {}
+    public void saveGameClose() {
+        // saves
+        if (savesTeam1.getSelectedItem() != null) {
+            currentGame.getGameStats()[0][currentGame.getLineups().get(0).indexOf((Player) savesTeam1.getSelectedItem())].addSave();
+        }
+
+        if (savesTeam2.getSelectedItem() != null) {
+            currentGame.getGameStats()[1][currentGame.getLineups().get(1).indexOf((Player) savesTeam2.getSelectedItem())].addSave();
+        }
+
+        // wins
+        if (winsTeam1.getSelectedItem() != null) {
+            currentGame.getGameStats()[0][currentGame.getLineups().get(0).indexOf((Player) winsTeam1.getSelectedItem())].addWin();
+        }
+
+        if (winsTeam2.getSelectedItem() != null) {
+            currentGame.getGameStats()[1][currentGame.getLineups().get(1).indexOf((Player) winsTeam2.getSelectedItem())].addWin();
+        }
+
+        // losses
+        if (lossesTeam1.getSelectedItem() != null) {
+            currentGame.getGameStats()[0][currentGame.getLineups().get(0).indexOf((Player) lossesTeam1.getSelectedItem())].addLoss();
+        }
+
+        if (lossesTeam2.getSelectedItem() != null) {
+            currentGame.getGameStats()[1][currentGame.getLineups().get(1).indexOf((Player) lossesTeam2.getSelectedItem())].addLoss();
+        }
+
+        // save opportunities
+        if (saveOpportunitiesTeam1.getSelectedItem() != null) {
+            currentGame.getGameStats()[0][currentGame.getLineups().get(0).indexOf((Player) saveOpportunitiesTeam1.getSelectedItem())].addSaveOpportunity();
+        }
+
+        if (saveOpportunitiesTeam2.getSelectedItem() != null) {
+            currentGame.getGameStats()[1][currentGame.getLineups().get(1).indexOf((Player) saveOpportunitiesTeam2.getSelectedItem())].addSaveOpportunity();
+        }
+
+        // holds
+        if (holdsTeam1.getSelectedItem() != null) {
+            currentGame.getGameStats()[0][currentGame.getLineups().get(0).indexOf((Player) holdsTeam1.getSelectedItem())].addHold();
+        }
+
+        if (holdsTeam2.getSelectedItem() != null) {
+            currentGame.getGameStats()[1][currentGame.getLineups().get(1).indexOf((Player) holdsTeam2.getSelectedItem())].addHold();
+        }
+
+        // add all data to players
+        currentGame.finishGame();
+    }
     // write enter game
     public void enterGame(Game game, String title) {
         if (!currentGame.isHasStarted()) {

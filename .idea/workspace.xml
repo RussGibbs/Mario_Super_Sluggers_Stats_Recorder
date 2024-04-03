@@ -9,7 +9,6 @@
       <change beforePath="$PROJECT_DIR$/seasons.xml" beforeDir="false" afterPath="$PROJECT_DIR$/seasons.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/AppFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/AppFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +87,14 @@
       <option name="project" value="LOCAL" />
       <updated>1712174950074</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="edit">
+      <created>1712184671906</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1712184671906</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
