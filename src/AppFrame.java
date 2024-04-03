@@ -79,6 +79,8 @@ public class AppFrame extends JFrame implements ActionListener {
     JRadioButton out1;
     JRadioButton out2;
 
+
+
     JButton cancel;
     JButton saveEditedPitcher;
     JComboBox<Player> changePitcherBox;
@@ -903,6 +905,34 @@ public class AppFrame extends JFrame implements ActionListener {
         add(mainPanel);
         setVisible(true);
     }
+    public void loadGameError() {
+        setTitle("Error");
+        mainPanel = new JPanel();
+        mainPanel.setBackground(background);
+        mainPanel.setLayout(new GridLayout(6,1));
+        for (int i = 0; i < 2; i++) {
+            JPanel jPanel = new JPanel();
+            jPanel.setBackground(background);
+            mainPanel.add(jPanel);
+        }
+        JPanel question = new JPanel();
+        question.setBackground(background);
+        question.setLayout(new FlowLayout());
+        mainPanel.add(question);
+        question.add(new JLabel("Failed to create Game! Each Roster must have at least 9 players"));
+
+        JPanel responses = new JPanel();
+        responses.setBackground(background);
+        responses.setLayout(new FlowLayout());
+        mainPanel.add(responses);
+
+        seasonBack = new JButton("Okay");
+        seasonBack.addActionListener(this);
+        responses.add(seasonBack);
+
+        add(mainPanel);
+        setVisible(true);
+    }
 
     public void loadChangePitcher(String title) {
         setTitle(title);
@@ -1011,11 +1041,17 @@ public class AppFrame extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == newGame) {
-            currentSeason.addGame();
-            mainPanel.setVisible(false);
-            currentGame = currentSeason.getGame(currentSeason.getGames().size() - 1);
-            loadGame.add(new JButton());
-            loadGame(currentSeason.getGame(currentSeason.getGames().size() - 1), "Game " + currentSeason.getGames().size());
+            if (currentSeason.getRoster(0).getPlayers().size() >= 9 && currentSeason.getRoster(1).getPlayers().size() >= 9) {
+                currentSeason.addGame();
+                mainPanel.setVisible(false);
+                currentGame = currentSeason.getGame(currentSeason.getGames().size() - 1);
+                loadGame.add(new JButton());
+                loadGame(currentSeason.getGame(currentSeason.getGames().size() - 1), "Game " + currentSeason.getGames().size());
+            }
+            else {
+                mainPanel.setVisible(false);
+                loadGameError();
+            }
         }
 
         for (int i = 0; i < currentSeason.getGames().size(); i++) {

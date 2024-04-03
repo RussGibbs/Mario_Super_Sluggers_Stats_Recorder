@@ -4,23 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d5d1725-5e12-4b76-bcbc-24f0712dc230" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Mario Super Sluggers Stats Recorder.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/seasons.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/AllFiles.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/AppFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/PlayerTableModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Season.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Stats.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Team.java" afterDir="false" />
+    <list default="true" id="3d5d1725-5e12-4b76-bcbc-24f0712dc230" name="Changes" comment="edit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/seasons.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AppFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/AppFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,9 +62,19 @@
       <option name="presentableId" value="Default" />
       <updated>1712030062618</updated>
     </task>
+    <task id="LOCAL-00001" summary="edit">
+      <created>1712147078813</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712147078813</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="edit" />
+    <option name="LAST_COMMIT_MESSAGE" value="edit" />
   </component>
 </project>
