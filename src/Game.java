@@ -274,8 +274,9 @@ public class Game implements Serializable {
                 // give the hitter a home run
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHomeRun();
 
-                // give the pitcher a hit
+                // give the pitcher a hit and a home run allowed
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
+                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addHomeRunAllowed();
 
                 // advance since as is the same for either runner advance style
                 advance(-1, 4, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
@@ -309,32 +310,6 @@ public class Game implements Serializable {
 
                 // advance
                 advance(-1, 2, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
-
-                nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
-            }
-
-            case 3 -> {
-                // give the hitter a triple
-                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addTriple();
-
-                // give the pitcher a hit
-                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
-
-                // advance
-                advance(-1, 3, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
-
-                nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
-            }
-
-            case 4 -> {
-                // give the hitter a home run
-                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHomeRun();
-
-                // give the pitcher a hit
-                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
-
-                // advance
-                advance(-1, 4, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
 
                 nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
             }
@@ -444,6 +419,23 @@ public class Game implements Serializable {
         gameStats[playerIndex[0]][playerIndex[1]].addSteal();
     }
 
+    public void addCaughtStealing(Player player) {
+        int[] playerIndex = new int[2];
+
+        loop:
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (lineups.get(i).get(j) == player) {
+                    playerIndex[0] = i;
+                    playerIndex[1] = j;
+                    break loop;
+                }
+            }
+        }
+
+        gameStats[playerIndex[0]][playerIndex[1]].addCaughtStealing();
+    }
+
     public void addRun(Player player) {
         int[] playerIndex = new int[2];
 
@@ -461,7 +453,12 @@ public class Game implements Serializable {
         gameStats[playerIndex[0]][playerIndex[1]].addRun();
     }
 
+
+
     public void addSacrifice(Player player) {
+        // remove an at bat
+        gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].setAtBats(
+                gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].getAtBats() - 1);
         int[] playerIndex = new int[2];
 
         loop:

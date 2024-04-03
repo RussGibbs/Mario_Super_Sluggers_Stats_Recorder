@@ -84,6 +84,8 @@ public class Player implements Serializable {
         this.stats.addCompleteGames(stats.getCompleteGames());
         this.stats.addSaveOpportunities(stats.getSaveOpportunities());
         this.stats.addHolds(stats.getHolds());
+        this.stats.addHomeRunsAllowed(stats.getHomeRunsAllowed());
+        this.stats.addCaughtStealing(stats.getCaughtStealing());
     }
 }
 

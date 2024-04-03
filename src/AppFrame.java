@@ -1,7 +1,11 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentListener;
 import java.io.*;
 import java.lang.ClassNotFoundException;
 import java.io.File;
@@ -79,6 +83,38 @@ public class AppFrame extends JFrame implements ActionListener {
     JRadioButton out1;
     JRadioButton out2;
 
+    JButton saveCustomEvent;
+    JCheckBox advanceBattingOrder;
+    JCheckBox error;
+    JComboBox<Player> errorBox;
+    JCheckBox hazard;
+    JCheckBox steal;
+    JComboBox<Player> stealBox;
+    JCheckBox sacrifice;
+    JSpinner advanceBatter;
+    JCheckBox earnedRun1;
+    JCheckBox outCheckBox;
+    JCheckBox strikeoutCheckBox;
+    JSpinner advanceFirst;
+    JCheckBox earnedRun2;
+    JCheckBox firstBaseOut;
+    JCheckBox caughtStealing1;
+    JSpinner advanceSecond;
+    JCheckBox earnedRun3;
+    JCheckBox secondBaseOut;
+    JCheckBox caughtStealing2;
+    JSpinner advanceThird;
+    JCheckBox earnedRun4;
+    JCheckBox thirdBaseOut;
+    JCheckBox caughtStealing3;
+    JCheckBox hitPitcher;
+    JCheckBox hitBatter;
+    JComboBox<String> hitType;
+
+    ChangeListener batterListener;
+    ChangeListener firstListener;
+    ChangeListener secondListener;
+    ChangeListener thirdListener;
 
 
     JButton cancel;
@@ -92,7 +128,7 @@ public class AppFrame extends JFrame implements ActionListener {
     AllFiles allFiles = loadFromFile("seasons.xml");
 
     public AppFrame() throws IOException, ClassNotFoundException {
-        setSize(900, 550);
+        setSize(1200, 800);
         background = new Color(0xaacccc);
         loadHome();
     }
@@ -988,7 +1024,558 @@ public class AppFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public void loadOther(String title) {}
+    public void loadOther(String title) {
+        setTitle(title);
+        mainPanel = new JPanel();
+        mainPanel.setBackground(background);
+        mainPanel.setLayout(new GridLayout(3,1));
+
+        JPanel combinedHigh = new JPanel();
+        combinedHigh.setBackground(background);
+        combinedHigh.setLayout(new GridLayout(2,1));
+        mainPanel.add(combinedHigh);
+
+        // highest
+        JPanel highestPanel = new JPanel();
+        highestPanel.setBackground(background);
+        highestPanel.setLayout(new GridLayout(1,3));
+        combinedHigh.add(highestPanel);
+
+        JPanel cancelPanel = new JPanel();
+        cancelPanel.setBackground(background);
+        cancelPanel.setLayout(new FlowLayout());
+        highestPanel.add(cancelPanel);
+
+        if (cancel == null) {
+            cancel = new JButton("Cancel");
+            cancel.addActionListener(this);
+        }
+        cancelPanel.add(cancel);
+
+        for (int i = 0; i < 1; i++) {
+            JPanel jPanel = new JPanel();
+            jPanel.setBackground(background);
+            highestPanel.add(jPanel);
+        }
+
+        JPanel savePanel = new JPanel();
+        savePanel.setBackground(background);
+        savePanel.setLayout(new FlowLayout());
+        highestPanel.add(savePanel);
+
+        if (saveCustomEvent == null) {
+            saveCustomEvent = new JButton("Save and Exit");
+            saveCustomEvent.addActionListener(this);
+        }
+        savePanel.add(saveCustomEvent);
+
+        // high
+        JLabel spacer1 = new JLabel("             ");
+        JLabel spacer2 = new JLabel("             ");
+        JLabel spacer3 = new JLabel("             ");
+        JLabel spacer4 = new JLabel("             ");
+        JLabel spacer13 = new JLabel("             ");
+        JLabel spacer14 = new JLabel("             ");
+
+        JLabel spacer5 = new JLabel("              ");
+        JLabel spacer7 = new JLabel("              ");
+        JLabel spacer9 = new JLabel("              ");
+        JLabel spacer11 = new JLabel("              ");
+
+        JLabel spacer6 = new JLabel("                ");
+        JLabel spacer8 = new JLabel("                ");
+        JLabel spacer10 = new JLabel("                ");
+        JLabel spacer12 = new JLabel("                ");
+
+
+
+
+        JPanel highPanel = new JPanel();
+        highPanel.setBackground(background);
+        highPanel.setLayout(new GridLayout(4, 1));
+        combinedHigh.add(highPanel);
+
+        JPanel advanceBattingOrderPanel1 = new JPanel();
+        advanceBattingOrderPanel1.setBackground(background);
+        advanceBattingOrderPanel1.setLayout(new BorderLayout());
+        highPanel.add(advanceBattingOrderPanel1);
+
+        JPanel advanceBattingOrderPanel = new JPanel();
+        advanceBattingOrderPanel.setBackground(background);
+        advanceBattingOrderPanel.setLayout(new FlowLayout());
+        advanceBattingOrderPanel1.add(advanceBattingOrderPanel, BorderLayout.WEST);
+
+        advanceBattingOrderPanel.add(spacer1);
+        if (advanceBattingOrder == null) {
+            advanceBattingOrder = new JCheckBox("Advance Batting Order");
+            advanceBattingOrder.addActionListener(this);
+            advanceBattingOrder.setSelected(true);
+        }
+        advanceBattingOrderPanel.add(advanceBattingOrder);
+
+        JPanel errorPanel1 = new JPanel();
+        errorPanel1.setBackground(background);
+        errorPanel1.setLayout(new BorderLayout());
+        highPanel.add(errorPanel1);
+
+        JPanel errorPanel = new JPanel();
+        errorPanel.setBackground(background);
+        errorPanel.setLayout(new FlowLayout());
+        errorPanel1.add(errorPanel, BorderLayout.WEST);
+
+        errorPanel.add(spacer2);
+        if (error == null) {
+            error = new JCheckBox("Error");
+            error.addActionListener(this);
+        }
+        errorPanel.add(error);
+
+        if (error.isSelected()) {
+            if (errorBox == null) {
+                errorBox = new JComboBox<>();
+                for (int i = 0; i < currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex()).size(); i++) {
+                    errorBox.addItem(currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex()).get(i));
+                }
+                errorBox.setSelectedItem(null);
+            }
+            errorPanel.add(errorBox);
+
+            if (hazard == null) {
+                hazard = new JCheckBox("Hazard");
+                hazard.addActionListener(this);
+            }
+            errorPanel.add(hazard);
+
+            if (hazard.isSelected()) {
+                errorBox.setSelectedItem(null);
+                errorBox.setEnabled(false);
+            }
+            else {
+                errorBox.setEnabled(true);
+            }
+        }
+        else {
+            errorBox = null;
+            hazard = null;
+        }
+
+        JPanel stealPanel1 = new JPanel();
+        stealPanel1.setBackground(background);
+        stealPanel1.setLayout(new BorderLayout());
+        highPanel.add(stealPanel1);
+
+        JPanel stealPanel = new JPanel();
+        stealPanel.setBackground(background);
+        stealPanel.setLayout(new FlowLayout());
+        stealPanel1.add(stealPanel, BorderLayout.WEST);
+
+        stealPanel.add(spacer3);
+
+        if (steal == null) {
+            steal = new JCheckBox("Steal");
+            steal.addActionListener(this);
+        }
+        stealPanel.add(steal);
+
+        if (steal.isSelected()) {
+            if (stealBox == null) {
+                stealBox = new JComboBox<>();
+                for (int i = 0; i < currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0).size(); i++) {
+                    stealBox.addItem(currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0).get(i));
+                }
+                stealBox.setSelectedItem(null);
+            }
+            stealPanel.add(stealBox);
+        }
+        else {
+            stealBox = null;
+        }
+
+        JPanel sacrificePanel1 = new JPanel();
+        sacrificePanel1.setBackground(background);
+        sacrificePanel1.setLayout(new BorderLayout());
+        highPanel.add(sacrificePanel1);
+
+        JPanel sacrificePanel = new JPanel();
+        sacrificePanel.setBackground(background);
+        sacrificePanel.setLayout(new FlowLayout());
+        sacrificePanel1.add(sacrificePanel, BorderLayout.WEST);
+
+        sacrificePanel.add(spacer4);
+
+        if (sacrifice == null) {
+            sacrifice = new JCheckBox("Sacrifice");
+            sacrifice.addActionListener(this);
+        }
+        sacrificePanel.add(sacrifice);
+
+        // low
+        JPanel lowPanel = new JPanel();
+        lowPanel.setBackground(background);
+        lowPanel.setLayout(new GridLayout(8,1));
+        mainPanel.add(lowPanel);
+
+        JPanel advanceBatterPanel1 = new JPanel();
+        advanceBatterPanel1.setBackground(background);
+        advanceBatterPanel1.setLayout(new BorderLayout());
+        lowPanel.add(advanceBatterPanel1);
+
+        JPanel advanceBatterPanel = new JPanel();
+        advanceBatterPanel.setBackground(background);
+        advanceBatterPanel.setLayout(new FlowLayout());
+        advanceBatterPanel1.add(advanceBatterPanel, BorderLayout.WEST);
+
+        advanceBatterPanel.add(spacer5);
+
+        if (advanceBatter == null) {
+            String[] values = {"0", "1", "2", "3", "4"};
+            SpinnerListModel model = new SpinnerListModel(values);
+            advanceBatter = new JSpinner(model);
+
+            if (batterListener == null) {
+                batterListener = new ChangeListener() {
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        outCheckBox = null;
+                        strikeoutCheckBox = null;
+                        mainPanel.setVisible(false);
+                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+                    }
+                };
+            }
+
+            advanceBatter.addChangeListener(batterListener);
+        }
+        advanceBatterPanel.add(advanceBatter);
+
+        advanceBatterPanel.add(new JLabel("Advance Batter"));
+
+        if (outCheckBox == null) {
+            outCheckBox = new JCheckBox("Out");
+            outCheckBox.addActionListener(this);
+        }
+        advanceBatterPanel.add(outCheckBox);
+
+        if (strikeoutCheckBox == null) {
+            strikeoutCheckBox = new JCheckBox("Strikeout");
+            strikeoutCheckBox.addActionListener(this);
+        }
+        advanceBatterPanel.add(strikeoutCheckBox);
+
+        JPanel batterPanelLower1 = new JPanel();
+        batterPanelLower1.setBackground(background);
+        batterPanelLower1.setLayout(new BorderLayout());
+        lowPanel.add(batterPanelLower1);
+
+        JPanel batterPanelLower = new JPanel();
+        batterPanelLower.setBackground(background);
+        batterPanelLower.setLayout(new FlowLayout());
+        batterPanelLower1.add(batterPanelLower, BorderLayout.WEST);
+
+        if (advanceBatter.getValue().equals("4")) {
+            if (earnedRun1 == null) {
+                earnedRun1 = new JCheckBox("Earned Run");
+                earnedRun1.addActionListener(this);
+            }
+            batterPanelLower.add(spacer6);
+            batterPanelLower.add(earnedRun1);
+        }
+        else {
+            earnedRun1 = null;
+        }
+
+        // first base
+        JPanel firstPanel1 = new JPanel();
+        firstPanel1.setBackground(background);
+        firstPanel1.setLayout(new BorderLayout());
+        lowPanel.add(firstPanel1);
+
+        JPanel firstPanel = new JPanel();
+        firstPanel.setBackground(background);
+        firstPanel.setLayout(new FlowLayout());
+        firstPanel1.add(firstPanel, BorderLayout.WEST);
+
+        firstPanel.add(spacer7);
+
+        if (advanceFirst == null) {
+            String[] values = {"0", "1", "2", "3"};
+            SpinnerListModel model = new SpinnerListModel(values);
+            advanceFirst = new JSpinner(model);
+
+            if (firstListener == null) {
+                firstListener = new ChangeListener() {
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        firstBaseOut = null;
+                        mainPanel.setVisible(false);
+                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+                    }
+                };
+            }
+
+            advanceFirst.addChangeListener(firstListener);
+        }
+        firstPanel.add(advanceFirst);
+
+        firstPanel.add(new JLabel("Advance 1st Runner"));
+
+        if (firstBaseOut== null) {
+            firstBaseOut = new JCheckBox("1st Runner Out");
+            firstBaseOut.addActionListener(this);
+        }
+        firstPanel.add(firstBaseOut);
+
+
+        JPanel firstPanelLower1 = new JPanel();
+        firstPanelLower1.setBackground(background);
+        firstPanelLower1.setLayout(new BorderLayout());
+        lowPanel.add(firstPanelLower1);
+
+        JPanel firstPanelLower = new JPanel();
+        firstPanelLower.setBackground(background);
+        firstPanelLower.setLayout(new FlowLayout());
+        firstPanelLower1.add(firstPanelLower, BorderLayout.WEST);
+
+        if (advanceFirst.getValue().toString().compareTo("2") > 0) {
+            if (earnedRun2 == null) {
+                earnedRun2 = new JCheckBox("Earned Run");
+                earnedRun2.addActionListener(this);
+            }
+            firstPanelLower.add(spacer8);
+            firstPanelLower.add(earnedRun2);
+        }
+        else {
+            earnedRun2 = null;
+        }
+
+        if (firstBaseOut.isSelected()) {
+            if (caughtStealing1 == null) {
+                caughtStealing1 = new JCheckBox("Caught Stealing");
+                caughtStealing1.addActionListener(this);
+            }
+            firstPanelLower.add(new JLabel("                                                           "));
+            firstPanelLower.add(caughtStealing1);
+        }
+        else {
+            caughtStealing1 = null;
+        }
+
+
+
+        // second base
+        JPanel secondPanel1 = new JPanel();
+        secondPanel1.setBackground(background);
+        secondPanel1.setLayout(new BorderLayout());
+        lowPanel.add(secondPanel1);
+
+        JPanel secondPanel = new JPanel();
+        secondPanel.setBackground(background);
+        secondPanel.setLayout(new FlowLayout());
+        secondPanel1.add(secondPanel, BorderLayout.WEST);
+
+        secondPanel.add(spacer9);
+
+        if (advanceSecond == null) {
+            String[] values = {"0", "1", "2"};
+            SpinnerListModel model = new SpinnerListModel(values);
+            advanceSecond = new JSpinner(model);
+
+            if (secondListener == null) {
+                secondListener = new ChangeListener() {
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        secondBaseOut = null;
+                        mainPanel.setVisible(false);
+                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+                    }
+                };
+            }
+
+            advanceSecond.addChangeListener(secondListener);
+        }
+        secondPanel.add(advanceSecond);
+
+        secondPanel.add(new JLabel("Advance 2nd Runner"));
+
+        if (secondBaseOut== null) {
+            secondBaseOut = new JCheckBox("2nd Runner Out");
+            secondBaseOut.addActionListener(this);
+        }
+        secondPanel.add(secondBaseOut);
+
+
+        JPanel secondPanelLower1 = new JPanel();
+        secondPanelLower1.setBackground(background);
+        secondPanelLower1.setLayout(new BorderLayout());
+        lowPanel.add(secondPanelLower1);
+
+        JPanel secondPanelLower = new JPanel();
+        secondPanelLower.setBackground(background);
+        secondPanelLower.setLayout(new FlowLayout());
+        secondPanelLower1.add(secondPanelLower, BorderLayout.WEST);
+
+        if (advanceSecond.getValue().toString().compareTo("1") > 0) {
+            if (earnedRun3 == null) {
+                earnedRun3 = new JCheckBox("Earned Run");
+                earnedRun3.addActionListener(this);
+            }
+            secondPanelLower.add(spacer10);
+            secondPanelLower.add(earnedRun3);
+        }
+        else {
+            earnedRun3 = null;
+        }
+
+        if (secondBaseOut.isSelected()) {
+            if (caughtStealing2 == null) {
+                caughtStealing2 = new JCheckBox("Caught Stealing");
+                caughtStealing2.addActionListener(this);
+            }
+            secondPanelLower.add(new JLabel("                                                           "));
+            secondPanelLower.add(caughtStealing2);
+        }
+        else {
+            caughtStealing2 = null;
+        }
+
+        // third base
+        JPanel thirdPanel1 = new JPanel();
+        thirdPanel1.setBackground(background);
+        thirdPanel1.setLayout(new BorderLayout());
+        lowPanel.add(thirdPanel1);
+
+        JPanel thirdPanel = new JPanel();
+        thirdPanel.setBackground(background);
+        thirdPanel.setLayout(new FlowLayout());
+        thirdPanel1.add(thirdPanel, BorderLayout.WEST);
+
+        thirdPanel.add(spacer11);
+
+        if (advanceThird == null) {
+            String[] values = {"0", "1"};
+            SpinnerListModel model = new SpinnerListModel(values);
+            advanceThird = new JSpinner(model);
+
+            if (thirdListener == null) {
+                thirdListener = new ChangeListener() {
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        thirdBaseOut = null;
+                        mainPanel.setVisible(false);
+                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+                    }
+                };
+            }
+
+            advanceThird.addChangeListener(thirdListener);
+        }
+        thirdPanel.add(advanceThird);
+
+        thirdPanel.add(new JLabel("Advance 3rd Runner"));
+
+        if (thirdBaseOut == null) {
+            thirdBaseOut = new JCheckBox("3rd Runner Out");
+            thirdBaseOut.addActionListener(this);
+        }
+        thirdPanel.add(thirdBaseOut);
+
+
+        JPanel thirdPanelLower1 = new JPanel();
+        thirdPanelLower1.setBackground(background);
+        thirdPanelLower1.setLayout(new BorderLayout());
+        lowPanel.add(thirdPanelLower1);
+
+        JPanel thirdPanelLower = new JPanel();
+        thirdPanelLower.setBackground(background);
+        thirdPanelLower.setLayout(new FlowLayout());
+        thirdPanelLower1.add(thirdPanelLower, BorderLayout.WEST);
+
+        if (advanceThird.getValue().toString().compareTo("0") > 0) {
+            if (earnedRun4 == null) {
+                earnedRun4 = new JCheckBox("Earned Run");
+                earnedRun4.addActionListener(this);
+            }
+            thirdPanelLower.add(spacer12);
+            thirdPanelLower.add(earnedRun4);
+        }
+        else {
+            earnedRun4 = null;
+        }
+
+        if (thirdBaseOut.isSelected()) {
+            if (caughtStealing3 == null) {
+                caughtStealing3 = new JCheckBox("Caught Stealing");
+                caughtStealing3.addActionListener(this);
+            }
+            thirdPanelLower.add(new JLabel("                                                           "));
+            thirdPanelLower.add(caughtStealing3);
+        }
+        else {
+            caughtStealing3 = null;
+        }
+
+        // lowest
+        JPanel lowestPanel = new JPanel();
+        lowestPanel.setBackground(background);
+        lowestPanel.setLayout(new GridLayout(8,1));
+        mainPanel.add(lowestPanel);
+
+        JPanel hitPitcherPanel1 = new JPanel();
+        hitPitcherPanel1.setBackground(background);
+        hitPitcherPanel1.setLayout(new BorderLayout());
+        lowestPanel.add(hitPitcherPanel1);
+
+        JPanel hitPitcherPanel = new JPanel();
+        hitPitcherPanel.setBackground(background);
+        hitPitcherPanel.setLayout(new FlowLayout());
+        hitPitcherPanel1.add(hitPitcherPanel, BorderLayout.WEST);
+
+        hitPitcherPanel.add(spacer13);
+
+        if (hitPitcher == null) {
+            hitPitcher = new JCheckBox("Hit (Pitcher)");
+            hitPitcher.addActionListener(this);
+        }
+        hitPitcherPanel.add(hitPitcher);
+
+        JPanel hitBatterPanel1 = new JPanel();
+        hitBatterPanel1.setBackground(background);
+        hitBatterPanel1.setLayout(new BorderLayout());
+        lowestPanel.add(hitBatterPanel1);
+
+        JPanel hitBatterPanel = new JPanel();
+        hitBatterPanel.setBackground(background);
+        hitBatterPanel.setLayout(new FlowLayout());
+        hitBatterPanel1.add(hitBatterPanel, BorderLayout.WEST);
+
+        hitBatterPanel.add(spacer14);
+
+        if (hitBatter == null) {
+            hitBatter = new JCheckBox("Hit (Batter)");
+            hitBatter.addActionListener(this);
+        }
+        hitBatterPanel.add(hitBatter);
+
+        if (hitBatter.isSelected()) {
+            if (hitType == null) {
+                hitType = new JComboBox<>();
+                hitType.addItem("Single");
+                hitType.addItem("Double");
+                hitType.addItem("Triple");
+                hitType.addItem("Home Run");
+                hitType.addItem("Walk");
+
+                hitType.setSelectedItem(null);
+            }
+            hitBatterPanel.add(hitType);
+        }
+        else {
+            hitType = null;
+        }
+
+        add(mainPanel);
+        setVisible(true);
+    }
     public void save() {
         try {
             writeToFile(allFiles, "seasons.xml");
@@ -997,6 +1584,7 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
+    public void saveOther() {}
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == home) {
@@ -1045,6 +1633,12 @@ public class AppFrame extends JFrame implements ActionListener {
                 currentSeason.addGame();
                 mainPanel.setVisible(false);
                 currentGame = currentSeason.getGame(currentSeason.getGames().size() - 1);
+                for (int i = 0; i < 9; i++) {
+                    currentGame.setPlayerToLineup(currentSeason.getRoster(0).getPlayer(i), 0, i);
+                    currentGame.setPlayerToLineup(currentSeason.getRoster(1).getPlayer(i), 1, i);
+                }
+                currentGame.setStartingPitcher(0, currentSeason.getRoster(0).getPlayer(0));
+                currentGame.setStartingPitcher(1, currentSeason.getRoster(1).getPlayer(0));
                 loadGame.add(new JButton());
                 loadGame(currentSeason.getGame(currentSeason.getGames().size() - 1), "Game " + currentSeason.getGames().size());
             }
@@ -1304,13 +1898,41 @@ public class AppFrame extends JFrame implements ActionListener {
             enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
-        if (e.getSource() == other) {
-            mainPanel.setVisible(false);
-            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
-        }
-
         if (e.getSource() == cancel) {
             mainPanel.setVisible(false);
+            saveCustomEvent = null;
+            advanceBattingOrder = null;
+            error = null;
+            errorBox = null;
+            hazard = null;
+            steal = null;
+            stealBox = null;
+            sacrifice = null;
+            advanceBatter = null;
+            earnedRun1 = null;
+            outCheckBox = null;
+            strikeoutCheckBox = null;
+            advanceFirst = null;
+            earnedRun2 = null;
+            firstBaseOut = null;
+            caughtStealing1 = null;
+            advanceSecond = null;
+            earnedRun3 = null;
+            secondBaseOut = null;
+            caughtStealing2 = null;
+            advanceThird = null;
+            earnedRun4 = null;
+            thirdBaseOut = null;
+            caughtStealing3 = null;
+            hitPitcher = null;
+            hitBatter = null;
+            hitType = null;
+
+            batterListener = null;
+            firstListener = null;
+            secondListener = null;
+            thirdListener = null;
+
             enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
@@ -1318,6 +1940,157 @@ public class AppFrame extends JFrame implements ActionListener {
             mainPanel.setVisible(false);
             currentGame.placePitcher(currentGame.getCurrentTeamPitchingIndex(), (Player) changePitcherBox.getSelectedItem());
             save();
+            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+        }
+
+        if (e.getSource() == other) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == advanceBattingOrder) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == error) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == hazard) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == steal) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == sacrifice) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == outCheckBox) {
+            mainPanel.setVisible(false);
+            advanceBatter = null;
+            if (outCheckBox.isSelected()) {
+                strikeoutCheckBox = null;
+            }
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == strikeoutCheckBox) {
+            mainPanel.setVisible(false);
+            advanceBatter = null;
+            if (strikeoutCheckBox.isSelected()) {
+                outCheckBox = null;
+            }
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == earnedRun1) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == firstBaseOut) {
+            mainPanel.setVisible(false);
+            advanceFirst = null;
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == earnedRun2) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == caughtStealing1) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == secondBaseOut) {
+            mainPanel.setVisible(false);
+            advanceSecond = null;
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == earnedRun3) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == caughtStealing2) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == thirdBaseOut) {
+            mainPanel.setVisible(false);
+            advanceThird = null;
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == earnedRun4) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == caughtStealing3) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == hitPitcher) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == hitBatter) {
+            mainPanel.setVisible(false);
+            loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
+        }
+
+        if (e.getSource() == saveCustomEvent) {
+            mainPanel.setVisible(false);
+            saveOther();
+
+            saveCustomEvent = null;
+            advanceBattingOrder = null;
+            error = null;
+            errorBox = null;
+            hazard = null;
+            steal = null;
+            stealBox = null;
+            sacrifice = null;
+            advanceBatter = null;
+            earnedRun1 = null;
+            outCheckBox = null;
+            strikeoutCheckBox = null;
+            advanceFirst = null;
+            earnedRun2 = null;
+            firstBaseOut = null;
+            caughtStealing1 = null;
+            advanceSecond = null;
+            earnedRun3 = null;
+            secondBaseOut = null;
+            caughtStealing2 = null;
+            advanceThird = null;
+            earnedRun4 = null;
+            thirdBaseOut = null;
+            caughtStealing3 = null;
+            hitPitcher = null;
+            hitBatter = null;
+            hitType = null;
+
+            batterListener = null;
+            firstListener = null;
+            secondListener = null;
+            thirdListener = null;
+
             enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
     }

@@ -24,6 +24,7 @@ public class Stats implements Serializable {
     private int gamesPitched;
     private double inningsPitched;
     private int strikeOuts;
+    private int homeRunsAllowed;
     private int saves;
     private int saveOpportunities;
     private int holds;
@@ -37,6 +38,7 @@ public class Stats implements Serializable {
 
     // Misc
     private int steals;
+    private int caughtStealing;
     private int errors;
 
     public Stats() {
@@ -51,7 +53,7 @@ public class Stats implements Serializable {
         homeRuns = 0;
 
         hitterWalks = 0;
-        sacrifices= 0;
+        sacrifices = 0;
         plateAppearances = 0;
 
         completeGames = 0;
@@ -61,6 +63,7 @@ public class Stats implements Serializable {
         gamesPitched = 0;
         inningsPitched = 0;
         strikeOuts = 0;
+        homeRunsAllowed = 0;
         saves = 0;
         saveOpportunities = 0;
         holds = 0;
@@ -73,10 +76,19 @@ public class Stats implements Serializable {
         earnedRuns = 0;
 
         steals = 0;
+        caughtStealing = 0;
         errors = 0;
     }
 
     // getters
+
+    public int getCaughtStealing() {
+        return caughtStealing;
+    }
+
+    public int getHomeRunsAllowed() {
+        return homeRunsAllowed;
+    }
 
     public int getHolds() {
         return holds;
@@ -201,6 +213,14 @@ public class Stats implements Serializable {
     // Setters
 
 
+    public void setCaughtStealing(int caughtStealing) {
+        this.caughtStealing = caughtStealing;
+    }
+
+    public void setHomeRunsAllowed(int homeRunsAllowed) {
+        this.homeRunsAllowed = homeRunsAllowed;
+    }
+
     public void setHolds(int holds) {
         this.holds = holds;
     }
@@ -323,7 +343,16 @@ public class Stats implements Serializable {
         this.sacrifices = sacrifices;
     }
 
+
+
     // adders
+    public void addHomeRunAllowed() {
+        homeRunsAllowed++;
+    }
+
+    public void addCaughtStealing() {
+        caughtStealing++;
+    }
     public void addSaveOpportunity() {
         saveOpportunities++;
     }
@@ -446,6 +475,13 @@ public class Stats implements Serializable {
     }
 
     // combiners
+    public void addHomeRunsAllowed(int homeRunsAllowed) {
+        this.homeRunsAllowed += homeRunsAllowed;
+    }
+
+    public void addCaughtStealing(int caughtStealing) {
+        this.caughtStealing += caughtStealing;
+    }
     public void addSaveOpportunities(int saveOpportunities) {
         this.saveOpportunities = saveOpportunities;
     }

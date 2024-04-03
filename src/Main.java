@@ -9,4 +9,6 @@ public class Main {
     // add handling of finished game (award pitching stats)
     // add stats viewer to season page
     // add editable stats viewer to game page
+
+    // fix stats
 }
