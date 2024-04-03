@@ -13,6 +13,7 @@ public class Game implements Serializable {
 
     private boolean hasStarted;
     private boolean hasFinished;
+    private boolean hasClosed;
     private int inning;
     private int outs;
     private int[] score;
@@ -49,6 +50,7 @@ public class Game implements Serializable {
 
         hasStarted = false;
         hasFinished = false;
+        hasClosed = false;
         pitchesFirst = true;
         inning = 1;
         outs = 0;
@@ -563,7 +565,7 @@ public class Game implements Serializable {
                     score(tempBases[2], tempEarnedBases[2], hitter);
                 }
             }
-            else {
+            else if (amount == 4) {
                 clearBases();
                 // score runners on base
                 if (tempBases[0] != null) {
@@ -609,7 +611,7 @@ public class Game implements Serializable {
                     score(tempBases[2], tempEarnedBases[2], hitter);
                 }
             }
-            else {
+            else if (amount >= 3) {
                 bases[0] = null;
                 earnedBases[0] = null;
                 bases[1] = null;
@@ -720,8 +722,30 @@ public class Game implements Serializable {
         }
     }
 
+    public void awardSaveOpportunity(Player player) {
+        loop:
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (lineups.get(i).get(j) == player) {
+                    gameStats[i][j].addSaveOpportunity();
+                    break loop;
+                }
+            }
+        }
+    }
 
-    // do saves and wins / losses
+    public void awardHold(Player player) {
+        loop:
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (lineups.get(i).get(j) == player) {
+                    gameStats[i][j].addHold();
+                    break loop;
+                }
+            }
+        }
+    }
+
     public void finishGame() {
         hasFinished = true;
         inning--; // in order to make the innings not overflow
@@ -765,6 +789,11 @@ public class Game implements Serializable {
     }
 
     // setter methods
+
+
+    public void setHasClosed(boolean hasClosed) {
+        this.hasClosed = hasClosed;
+    }
 
     public void setHasStarted(boolean hasStarted) {
         this.hasStarted = hasStarted;
@@ -880,6 +909,11 @@ public class Game implements Serializable {
     }
 
     // getter methods
+
+
+    public boolean isHasClosed() {
+        return hasClosed;
+    }
 
     public boolean isHasStarted() {
         return hasStarted;

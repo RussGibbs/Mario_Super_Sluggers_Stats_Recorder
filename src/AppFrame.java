@@ -10,6 +10,7 @@ import java.io.*;
 import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AppFrame extends JFrame implements ActionListener {
     Season currentSeason;
@@ -116,10 +117,22 @@ public class AppFrame extends JFrame implements ActionListener {
     ChangeListener secondListener;
     ChangeListener thirdListener;
 
-
     JButton cancel;
     JButton saveEditedPitcher;
     JComboBox<Player> changePitcherBox;
+
+    JButton closeGame;
+    JButton suspendFinish;
+    JComboBox<Player> savesTeam1;
+    JComboBox<Player> savesTeam2;
+    JComboBox<Player> winsTeam1;
+    JComboBox<Player> winsTeam2;
+    JComboBox<Player> lossesTeam1;
+    JComboBox<Player> lossesTeam2;
+    JComboBox<Player> saveOpportunitiesTeam1;
+    JComboBox<Player> saveOpportunitiesTeam2;
+    JComboBox<Player> holdsTeam1;
+    JComboBox<Player> holdsTeam2;
 
     // other stuff for manual enter
 
@@ -431,9 +444,11 @@ public class AppFrame extends JFrame implements ActionListener {
         gameEnterPanel.setLayout(new GridLayout(3,1));
         mainPanel.add(gameEnterPanel);
 
-        enterGame = new JButton("Enter Game");
-        enterGame.addActionListener(this);
-        gameEnterPanel.add(enterGame);
+        if (!currentGame.isHasClosed()) {
+            enterGame = new JButton("Enter Game");
+            enterGame.addActionListener(this);
+            gameEnterPanel.add(enterGame);
+        }
 
         JPanel dayNight = new JPanel();
         dayNight.setBackground(background);
@@ -695,251 +710,341 @@ public class AppFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    public void loadGameFinish() {
+        if (currentGame.isHasClosed()) {
+            mainPanel.setVisible(false);
+            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+        }
+        else {
+            setTitle("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            mainPanel = new JPanel();
+            mainPanel.setBackground(background);
+            mainPanel.setLayout(new GridLayout(3, 1));
+
+            // upper
+            JPanel upper = new JPanel();
+            upper.setBackground(background);
+            upper.setLayout(new GridLayout(1,3));
+            mainPanel.add(upper);
+
+            JPanel closePanel = new JPanel();
+            closePanel.setBackground(background);
+            closePanel.setLayout(new FlowLayout());
+            upper.add(closePanel);
+
+            suspendFinish = new JButton("Close");
+            suspendFinish.addActionListener(this);
+            closePanel.add(suspendFinish);
+
+            JPanel exitPanel = new JPanel();
+            exitPanel.setBackground(background);
+            exitPanel.setLayout(new FlowLayout());
+            upper.add(exitPanel);
+
+            closeGame = new JButton("Save and Complete");
+            closeGame.addActionListener(this);
+            exitPanel.add(closeGame);
+
+            // middle
+            JPanel middlePanel = new JPanel();
+            middlePanel.setBackground(background);
+            middlePanel.setLayout(new GridLayout(5,1));
+            mainPanel.add(middlePanel);
+
+            JPanel savesPanel = new JPanel();
+            savesPanel.setBackground(background);
+            savesPanel.setLayout(new FlowLayout());
+            middlePanel.add(savesPanel);
+
+            savesPanel.add(new JLabel("Saves: "));
+
+            JPanel winsPanel = new JPanel();
+            winsPanel.setBackground(background);
+            winsPanel.setLayout(new FlowLayout());
+            middlePanel.add(winsPanel);
+
+            JPanel lossesPanel = new JPanel();
+            lossesPanel.setBackground(background);
+            lossesPanel.setLayout(new FlowLayout());
+            middlePanel.add(lossesPanel);
+
+            JPanel saveOpportunities = new JPanel();
+            saveOpportunities.setBackground(background);
+            saveOpportunities.setLayout(new FlowLayout());
+            middlePanel.add(saveOpportunities);
+
+            JPanel holdsPanel = new JPanel();
+            holdsPanel.setBackground(background);
+            holdsPanel.setLayout(new FlowLayout());
+            middlePanel.add(holdsPanel);
+
+
+
+
+
+            /*save;
+            win;
+            loss;
+            saveOpportunity;
+            hold;*/
+
+
+            add(mainPanel);
+            setVisible(true);
+        }
+    }
+
+    public void saveGameClose() {}
     // write enter game
     public void enterGame(Game game, String title) {
         if (!currentGame.isHasStarted()) {
             currentGame.startGame();
         }
 
-        setTitle(title);
-        mainPanel = new JPanel();
-        mainPanel.setBackground(background);
-        mainPanel.setLayout(new GridLayout(4,1));
-
-        // highest
-        JPanel highest = new JPanel();
-        highest.setBackground(background);
-        highest.setLayout(new GridLayout(1,3));
-        mainPanel.add(highest);
-
-        JPanel homePanel = new JPanel();
-        homePanel.setBackground(background);
-        homePanel.setLayout(new FlowLayout());
-        highest.add(homePanel);
-
-        home = new JButton("Home");
-        home.addActionListener(this);
-        homePanel.add(home);
-
-        for (int i = 0; i < 1; i++) {
-            JPanel jPanel = new JPanel();
-            jPanel.setBackground(background);
-            highest.add(jPanel);
+        if (currentGame.isHasFinished()) {
+            loadGameFinish();
         }
+        else {
+            setTitle(title);
+            mainPanel = new JPanel();
+            mainPanel.setBackground(background);
+            mainPanel.setLayout(new GridLayout(4, 1));
 
-        JPanel savePanel = new JPanel();
-        savePanel.setBackground(background);
-        savePanel.setLayout(new FlowLayout());
-        highest.add(savePanel);
+            // highest
+            JPanel highest = new JPanel();
+            highest.setBackground(background);
+            highest.setLayout(new GridLayout(1, 3));
+            mainPanel.add(highest);
 
-        save = new JButton("Save");
-        save.addActionListener(this);
-        savePanel.add(save);
+            JPanel homePanel = new JPanel();
+            homePanel.setBackground(background);
+            homePanel.setLayout(new FlowLayout());
+            highest.add(homePanel);
 
-        saveGame = new JButton("Save and Exit");
-        saveGame.addActionListener(this);
-        savePanel.add(saveGame);
+            home = new JButton("Home");
+            home.addActionListener(this);
+            homePanel.add(home);
 
-        // high
-        JPanel high = new JPanel();
-        high.setBackground(background);
-        high.setLayout(new GridLayout(1,5));
-        mainPanel.add(high);
+            for (int i = 0; i < 1; i++) {
+                JPanel jPanel = new JPanel();
+                jPanel.setBackground(background);
+                highest.add(jPanel);
+            }
 
-        for (int i = 0; i < 1; i++) {
-            JPanel jPanel = new JPanel();
-            jPanel.setBackground(background);
-            high.add(jPanel);
+            JPanel savePanel = new JPanel();
+            savePanel.setBackground(background);
+            savePanel.setLayout(new FlowLayout());
+            highest.add(savePanel);
+
+            save = new JButton("Save");
+            save.addActionListener(this);
+            savePanel.add(save);
+
+            saveGame = new JButton("Save and Exit");
+            saveGame.addActionListener(this);
+            savePanel.add(saveGame);
+
+            // high
+            JPanel high = new JPanel();
+            high.setBackground(background);
+            high.setLayout(new GridLayout(1, 5));
+            mainPanel.add(high);
+
+            for (int i = 0; i < 1; i++) {
+                JPanel jPanel = new JPanel();
+                jPanel.setBackground(background);
+                high.add(jPanel);
+            }
+
+            JPanel strikeOutPanel = new JPanel();
+            strikeOutPanel.setBackground(background);
+            strikeOutPanel.setLayout(new GridLayout(1, 1));
+            high.add(strikeOutPanel);
+
+            strikeOut = new JButton("Strikeout");
+            strikeOut.addActionListener(this);
+            strikeOutPanel.add(strikeOut);
+
+            JPanel outPanel = new JPanel();
+            outPanel.setBackground(background);
+            outPanel.setLayout(new GridLayout(1, 1));
+            high.add(outPanel);
+
+            out = new JButton("Out");
+            out.addActionListener(this);
+            outPanel.add(out);
+
+            JPanel otherPanel = new JPanel();
+            otherPanel.setBackground(background);
+            otherPanel.setLayout(new GridLayout(2, 1));
+            high.add(otherPanel);
+
+            other = new JButton("Other");
+            other.addActionListener(this);
+            otherPanel.add(other);
+
+            walk = new JButton("Walk");
+            walk.addActionListener(this);
+            otherPanel.add(walk);
+
+            JPanel inningsPanel = new JPanel();
+            inningsPanel.setBackground(background);
+            inningsPanel.setLayout(new GridLayout(2, 1));
+            high.add(inningsPanel);
+
+            JPanel upperInnings = new JPanel();
+            upperInnings.setBackground(background);
+            upperInnings.setLayout(new FlowLayout());
+            inningsPanel.add(upperInnings);
+
+            JPanel lowerInnings = new JPanel();
+            lowerInnings.setBackground(background);
+            lowerInnings.setLayout(new FlowLayout());
+            inningsPanel.add(lowerInnings);
+
+
+            firstBase = new JRadioButton();
+            firstBase.setEnabled(false);
+
+            secondBase = new JRadioButton();
+            secondBase.setEnabled(false);
+
+            thirdBase = new JRadioButton();
+            thirdBase.setEnabled(false);
+
+            if (currentGame.getBases()[0] != null) {
+                firstBase.setSelected(true);
+            }
+
+            if (currentGame.getBases()[1] != null) {
+                secondBase.setSelected(true);
+            }
+
+            if (currentGame.getBases()[2] != null) {
+                thirdBase.setSelected(true);
+            }
+
+            upperInnings.add(secondBase);
+            lowerInnings.add(thirdBase);
+            lowerInnings.add(firstBase);
+
+            // low
+            JPanel low = new JPanel();
+            low.setBackground(background);
+            low.setLayout(new GridLayout(1, 5));
+            mainPanel.add(low);
+
+            for (int i = 0; i < 1; i++) {
+                JPanel jPanel = new JPanel();
+                jPanel.setBackground(background);
+                low.add(jPanel);
+            }
+
+            JPanel singlesPanel = new JPanel();
+            singlesPanel.setBackground(background);
+            singlesPanel.setLayout(new GridLayout(2, 1));
+            low.add(singlesPanel);
+
+            singleHit = new JButton("Single");
+            singleHit.addActionListener(this);
+            singlesPanel.add(singleHit);
+
+            singleHitAdvance = new JButton("Single Advance");
+            singleHitAdvance.addActionListener(this);
+            singlesPanel.add(singleHitAdvance);
+
+            JPanel doublesPanel = new JPanel();
+            doublesPanel.setBackground(background);
+            doublesPanel.setLayout(new GridLayout(2, 1));
+            low.add(doublesPanel);
+
+            doubleHit = new JButton("Double");
+            doubleHit.addActionListener(this);
+            doublesPanel.add(doubleHit);
+
+            doubleHitAdvance = new JButton("Double Advance");
+            doubleHitAdvance.addActionListener(this);
+            doublesPanel.add(doubleHitAdvance);
+
+            JPanel bigHitPanel = new JPanel();
+            bigHitPanel.setBackground(background);
+            bigHitPanel.setLayout(new GridLayout(2, 1));
+            low.add(bigHitPanel);
+
+            tripleHit = new JButton("Triple");
+            tripleHit.addActionListener(this);
+            bigHitPanel.add(tripleHit);
+
+            homeRunHit = new JButton("Home Run");
+            homeRunHit.addActionListener(this);
+            bigHitPanel.add(homeRunHit);
+
+            JPanel scorePanel = new JPanel();
+            scorePanel.setBackground(background);
+            scorePanel.setLayout(new GridLayout(2, 1));
+            low.add(scorePanel);
+
+            JPanel inningAndOutsPanel = new JPanel();
+            inningAndOutsPanel.setBackground(background);
+            inningAndOutsPanel.setLayout(new FlowLayout());
+            scorePanel.add(inningAndOutsPanel);
+
+            String inningString = (((currentGame.getInning() + 1) / 2) +
+                    (currentGame.getInning() % 2 == 0 ? "-" : "+"));
+            inningAndOutsPanel.add(new JLabel(inningString));
+
+            out1 = new JRadioButton();
+            out1.setEnabled(false);
+            inningAndOutsPanel.add(out1);
+            out2 = new JRadioButton();
+            out2.setEnabled(false);
+            inningAndOutsPanel.add(out2);
+
+            if (currentGame.getOuts() >= 1) {
+                out1.setSelected(true);
+            }
+            if (currentGame.getOuts() == 2) {
+                out2.setSelected(true);
+            }
+
+            inningAndOutsPanel.add(out1);
+            inningAndOutsPanel.add(out2);
+
+            JPanel currentScorePanel = new JPanel();
+            currentScorePanel.setBackground(background);
+            currentScorePanel.setLayout(new FlowLayout());
+            scorePanel.add(currentScorePanel);
+
+            currentScorePanel.add(new JLabel(currentGame.getScore()[0] + " - " + currentGame.getScore()[1]));
+
+            // lowest
+            JPanel lowest = new JPanel();
+            lowest.setBackground(background);
+            lowest.setLayout(new GridLayout(1, 2));
+            mainPanel.add(lowest);
+
+            JPanel pitcherPanel = new JPanel();
+            pitcherPanel.setBackground(background);
+            pitcherPanel.setLayout(new FlowLayout());
+            lowest.add(pitcherPanel);
+
+            pitcherPanel.add(new JLabel("Current Pitcher: " + currentGame.getCurrentPitcher()[currentGame.getCurrentTeamPitchingIndex()] + " "));
+
+            changePitcher = new JButton("Change Pitcher");
+            changePitcher.addActionListener(this);
+            pitcherPanel.add(changePitcher);
+
+            JPanel hitterPanel = new JPanel();
+            hitterPanel.setBackground(background);
+            hitterPanel.setLayout(new FlowLayout());
+            lowest.add(hitterPanel);
+
+            hitterPanel.add(new JLabel("Current Batter: " +
+                    currentGame.getCurrentBatter()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]));
+
+            add(mainPanel);
+            setVisible(true);
         }
-
-        JPanel strikeOutPanel = new JPanel();
-        strikeOutPanel.setBackground(background);
-        strikeOutPanel.setLayout(new GridLayout(1,1));
-        high.add(strikeOutPanel);
-
-        strikeOut = new JButton("Strikeout");
-        strikeOut.addActionListener(this);
-        strikeOutPanel.add(strikeOut);
-
-        JPanel outPanel = new JPanel();
-        outPanel.setBackground(background);
-        outPanel.setLayout(new GridLayout(1,1));
-        high.add(outPanel);
-
-        out = new JButton("Out");
-        out.addActionListener(this);
-        outPanel.add(out);
-
-        JPanel otherPanel = new JPanel();
-        otherPanel.setBackground(background);
-        otherPanel.setLayout(new GridLayout(2,1));
-        high.add(otherPanel);
-
-        other = new JButton("Other");
-        other.addActionListener(this);
-        otherPanel.add(other);
-
-        walk = new JButton("Walk");
-        walk.addActionListener(this);
-        otherPanel.add(walk);
-
-        JPanel inningsPanel = new JPanel();
-        inningsPanel.setBackground(background);
-        inningsPanel.setLayout(new GridLayout(2,1));
-        high.add(inningsPanel);
-
-        JPanel upperInnings = new JPanel();
-        upperInnings.setBackground(background);
-        upperInnings.setLayout(new FlowLayout());
-        inningsPanel.add(upperInnings);
-
-        JPanel lowerInnings = new JPanel();
-        lowerInnings.setBackground(background);
-        lowerInnings.setLayout(new FlowLayout());
-        inningsPanel.add(lowerInnings);
-
-
-        firstBase = new JRadioButton();
-        firstBase.setEnabled(false);
-
-        secondBase = new JRadioButton();
-        secondBase.setEnabled(false);
-
-        thirdBase = new JRadioButton();
-        thirdBase.setEnabled(false);
-
-        if (currentGame.getBases()[0] != null) {
-            firstBase.setSelected(true);
-        }
-
-        if (currentGame.getBases()[1] != null) {
-            secondBase.setSelected(true);
-        }
-
-        if (currentGame.getBases()[2] != null) {
-            thirdBase.setSelected(true);
-        }
-
-        upperInnings.add(secondBase);
-        lowerInnings.add(thirdBase);
-        lowerInnings.add(firstBase);
-
-        // low
-        JPanel low = new JPanel();
-        low.setBackground(background);
-        low.setLayout(new GridLayout(1,5));
-        mainPanel.add(low);
-
-        for (int i = 0; i < 1; i++) {
-            JPanel jPanel = new JPanel();
-            jPanel.setBackground(background);
-            low.add(jPanel);
-        }
-
-        JPanel singlesPanel = new JPanel();
-        singlesPanel.setBackground(background);
-        singlesPanel.setLayout(new GridLayout(2,1));
-        low.add(singlesPanel);
-
-        singleHit = new JButton("Single");
-        singleHit.addActionListener(this);
-        singlesPanel.add(singleHit);
-
-        singleHitAdvance = new JButton("Single Advance");
-        singleHitAdvance.addActionListener(this);
-        singlesPanel.add(singleHitAdvance);
-
-        JPanel doublesPanel = new JPanel();
-        doublesPanel.setBackground(background);
-        doublesPanel.setLayout(new GridLayout(2,1));
-        low.add(doublesPanel);
-
-        doubleHit = new JButton("Double");
-        doubleHit.addActionListener(this);
-        doublesPanel.add(doubleHit);
-
-        doubleHitAdvance = new JButton("Double Advance");
-        doubleHitAdvance.addActionListener(this);
-        doublesPanel.add(doubleHitAdvance);
-
-        JPanel bigHitPanel = new JPanel();
-        bigHitPanel.setBackground(background);
-        bigHitPanel.setLayout(new GridLayout(2,1));
-        low.add(bigHitPanel);
-
-        tripleHit = new JButton("Triple");
-        tripleHit.addActionListener(this);
-        bigHitPanel.add(tripleHit);
-
-        homeRunHit = new JButton("Home Run");
-        homeRunHit.addActionListener(this);
-        bigHitPanel.add(homeRunHit);
-
-        JPanel scorePanel = new JPanel();
-        scorePanel.setBackground(background);
-        scorePanel.setLayout(new GridLayout(2, 1));
-        low.add(scorePanel);
-
-        JPanel inningAndOutsPanel = new JPanel();
-        inningAndOutsPanel.setBackground(background);
-        inningAndOutsPanel.setLayout(new FlowLayout());
-        scorePanel.add(inningAndOutsPanel);
-
-        String inningString = (((currentGame.getInning() + 1) / 2) +
-                (currentGame.getInning() % 2 == 0 ? "-" : "+"));
-        inningAndOutsPanel.add(new JLabel(inningString));
-
-        out1 = new JRadioButton();
-        out1.setEnabled(false);
-        inningAndOutsPanel.add(out1);
-        out2 = new JRadioButton();
-        out2.setEnabled(false);
-        inningAndOutsPanel.add(out2);
-
-        if (currentGame.getOuts() >= 1) {
-            out1.setSelected(true);
-        }
-        if (currentGame.getOuts() == 2) {
-            out2.setSelected(true);
-        }
-
-        inningAndOutsPanel.add(out1);
-        inningAndOutsPanel.add(out2);
-
-        JPanel currentScorePanel = new JPanel();
-        currentScorePanel.setBackground(background);
-        currentScorePanel.setLayout(new FlowLayout());
-        scorePanel.add(currentScorePanel);
-
-        currentScorePanel.add(new JLabel(currentGame.getScore()[0] + " - " + currentGame.getScore()[1]));
-
-        // lowest
-        JPanel lowest = new JPanel();
-        lowest.setBackground(background);
-        lowest.setLayout(new GridLayout(1,2));
-        mainPanel.add(lowest);
-
-        JPanel pitcherPanel = new JPanel();
-        pitcherPanel.setBackground(background);
-        pitcherPanel.setLayout(new FlowLayout());
-        lowest.add(pitcherPanel);
-
-        pitcherPanel.add(new JLabel("Current Pitcher: " + currentGame.getCurrentPitcher()[currentGame.getCurrentTeamPitchingIndex()] + " "));
-
-        changePitcher = new JButton("Change Pitcher");
-        changePitcher.addActionListener(this);
-        pitcherPanel.add(changePitcher);
-
-        JPanel hitterPanel = new JPanel();
-        hitterPanel.setBackground(background);
-        hitterPanel.setLayout(new FlowLayout());
-        lowest.add(hitterPanel);
-
-        hitterPanel.add(new JLabel("Current Batter: " +
-                currentGame.getCurrentBatter()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]));
-
-        add(mainPanel);
-        setVisible(true);
     }
     public void loadGameError() {
         setTitle("Error");
@@ -1564,8 +1669,8 @@ public class AppFrame extends JFrame implements ActionListener {
                 hitType.addItem("Triple");
                 hitType.addItem("Home Run");
                 hitType.addItem("Walk");
-
                 hitType.setSelectedItem(null);
+                hitType.addActionListener(this);
             }
             hitBatterPanel.add(hitType);
         }
@@ -1584,7 +1689,146 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
-    public void saveOther() {}
+    public void saveOther() {
+        if (error.isSelected() && !hazard.isSelected()) {
+            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                    [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex())
+                    .indexOf((Player) errorBox.getSelectedItem())].addError();
+        }
+
+        if (steal.isSelected()) {
+            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                    [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
+                    .indexOf((Player) stealBox.getSelectedItem())].addSteal();
+        }
+
+        if (sacrifice.isSelected()) {
+            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                    [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addSacrifice();
+            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                    [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addAtBats(-1);
+        }
+
+        if (hitBatter.isSelected()) {
+            currentGame.advance(2, Integer.parseInt((String) advanceThird.getValue()),
+                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
+            currentGame.advance(1, Integer.parseInt((String) advanceSecond.getValue()),
+                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
+            currentGame.advance(0, Integer.parseInt((String) advanceFirst.getValue()),
+                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
+            currentGame.advance(-1, Integer.parseInt((String) advanceBatter.getValue()),
+                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
+        }
+
+        else {
+            currentGame.advance(2, Integer.parseInt((String) advanceThird.getValue()), null);
+            currentGame.advance(1, Integer.parseInt((String) advanceSecond.getValue()), null);
+            currentGame.advance(0, Integer.parseInt((String) advanceFirst.getValue()), null);
+            currentGame.advance(-1, Integer.parseInt((String) advanceBatter.getValue()), null);
+        }
+
+        if (outCheckBox.isSelected()) {
+            currentGame.hitAdvance(0);
+        }
+
+        if (strikeoutCheckBox.isSelected()) {
+            currentGame.strikeOut();
+        }
+
+        if (earnedRun1 != null) {
+            if (!earnedRun1.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
+            }
+        }
+
+        if (earnedRun2 != null) {
+            if (!earnedRun2.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
+            }
+        }
+
+        if (earnedRun3 != null) {
+            if (!earnedRun3.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
+            }
+        }
+
+        if (earnedRun4 != null) {
+            if (!earnedRun4.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
+            }
+        }
+
+        if (firstBaseOut.isSelected()) {
+            if (caughtStealing1.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
+                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
+                        .indexOf(currentGame.getBases()[0])].addCaughtStealing();
+            }
+            currentGame.remove(0);
+        }
+
+        if (secondBaseOut.isSelected()) {
+            if (caughtStealing2.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
+                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
+                        .indexOf(currentGame.getBases()[1])].addCaughtStealing();
+            }
+            currentGame.remove(1);
+        }
+
+        if (thirdBaseOut.isSelected()) {
+            if (caughtStealing3.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
+                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
+                        .indexOf(currentGame.getBases()[2])].addCaughtStealing();
+            }
+            currentGame.remove(2);
+        }
+
+        if (hitPitcher.isSelected()) {
+            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                    [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addPitcherHit();
+        }
+        else {
+            if (!"0".equals(advanceBatter.getValue()) && !"4".equals(advanceBatter.getValue())) {
+                currentGame.setEarnedBase(Integer.parseInt((String) advanceBatter.getValue()) - 1, null);
+            }
+        }
+
+        if (hitBatter.isSelected()) {
+            if (hitType.getSelectedItem() == null || "Single".equals(hitType.getSelectedItem())) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addSingle();
+            }
+            else if ("Double".equals(hitType.getSelectedItem())) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addDouble();
+            }
+            else if ("Triple".equals(hitType.getSelectedItem())) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addTriple();
+            }
+            else if ("HomeRun".equals(hitType.getSelectedItem())) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addHomeRun();
+            }
+            else {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addHitterWalk();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addPitcherWalk();
+            }
+        }
+
+        if (advanceBattingOrder.isSelected()) {
+            currentGame.nextBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == home) {
@@ -2092,6 +2336,18 @@ public class AppFrame extends JFrame implements ActionListener {
             thirdListener = null;
 
             enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+        }
+
+        if (e.getSource() == closeGame) {
+            mainPanel.setVisible(false);
+            saveGameClose();
+            currentGame.setHasClosed(true);
+            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+        }
+
+        if (e.getSource() == suspendFinish) {
+            mainPanel.setVisible(false);
+            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
     }
 
