@@ -6,6 +6,7 @@ public class Stats implements Serializable {
     private int atBats;
     private int hits;
     private int runs;
+    private int strikeouts;
     private int rbis;
     private int singles;
     private int doubles;
@@ -21,6 +22,10 @@ public class Stats implements Serializable {
     private int wins;
     private int losses;
     private int gamesStarted;
+    private int gamesFinished;
+    private int singlesAllowed;
+    private int doublesAllowed;
+    private int triplesAllowed;
     private int gamesPitched;
     private double inningsPitched;
     private int strikeOuts;
@@ -46,6 +51,7 @@ public class Stats implements Serializable {
         atBats = 0;
         hits = 0;
         runs = 0;
+        strikeouts = 0;
         rbis = 0;
         singles = 0;
         doubles = 0;
@@ -60,6 +66,10 @@ public class Stats implements Serializable {
         wins = 0;
         losses = 0;
         gamesStarted = 0;
+        gamesFinished = 0;
+        singlesAllowed = 0;
+        doublesAllowed = 0;
+        triplesAllowed = 0;
         gamesPitched = 0;
         inningsPitched = 0;
         strikeOuts = 0;
@@ -81,6 +91,28 @@ public class Stats implements Serializable {
     }
 
     // getters
+
+
+    public int getDoublesAllowed() {
+        return doublesAllowed;
+    }
+
+    public int getGamesFinished() {
+        return gamesFinished;
+    }
+
+
+    public int getStrikeouts() {
+        return strikeouts;
+    }
+
+    public int getSinglesAllowed() {
+        return singlesAllowed;
+    }
+
+    public int getTriplesAllowed() {
+        return triplesAllowed;
+    }
 
     public int getCaughtStealing() {
         return caughtStealing;
@@ -211,7 +243,25 @@ public class Stats implements Serializable {
     }
 
     // Setters
+    public void setDoublesAllowed(int doublesAllowed) {
+        this.doublesAllowed = doublesAllowed;
+    }
 
+    public void setGamesFinished(int gamesFinished) {
+        this.gamesFinished = gamesFinished;
+    }
+
+    public void setSinglesAllowed(int singlesAllowed) {
+        this.singlesAllowed = singlesAllowed;
+    }
+
+    public void setStrikeouts(int strikeouts) {
+        this.strikeouts = strikeouts;
+    }
+
+    public void setTriplesAllowed(int triplesAllowed) {
+        this.triplesAllowed = triplesAllowed;
+    }
 
     public void setCaughtStealing(int caughtStealing) {
         this.caughtStealing = caughtStealing;
@@ -346,6 +396,25 @@ public class Stats implements Serializable {
 
 
     // adders
+    public void addDoubleAllowed() {
+        this.doublesAllowed ++;
+    }
+
+    public void addGameFinished() {
+        this.gamesFinished ++;
+    }
+
+    public void addSingleAllowed() {
+        this.singlesAllowed ++;
+    }
+
+    public void addStrikeout() {
+        this.strikeouts ++;
+    }
+
+    public void addTripleAllowed() {
+        this.triplesAllowed ++;
+    }
     public void addHomeRunAllowed() {
         homeRunsAllowed++;
     }
@@ -475,6 +544,25 @@ public class Stats implements Serializable {
     }
 
     // combiners
+    public void addDoublesAllowed(int doublesAllowed) {
+        this.doublesAllowed += doublesAllowed;
+    }
+
+    public void addGamesFinished(int gamesFinished) {
+        this.gamesFinished += gamesFinished;
+    }
+
+    public void addSinglesAllowed(int singlesAllowed) {
+        this.singlesAllowed += singlesAllowed;
+    }
+
+    public void addStrikeouts(int strikeouts) {
+        this.strikeouts += strikeouts;
+    }
+
+    public void addTriplesAllowed(int triplesAllowed) {
+        this.triplesAllowed += triplesAllowed;
+    }
     public void addHomeRunsAllowed(int homeRunsAllowed) {
         this.homeRunsAllowed += homeRunsAllowed;
     }

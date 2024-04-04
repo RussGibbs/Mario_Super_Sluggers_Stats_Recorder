@@ -167,8 +167,9 @@ public class Game implements Serializable {
             }
 
             case 1 -> {
-                // give the hitter a single
+                // give the hitter and pitcher a single
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addSingle();
+                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addSingleAllowed();
 
                 // give the pitcher a hit
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
@@ -199,8 +200,9 @@ public class Game implements Serializable {
             }
 
             case 2 -> {
-                // give the hitter a double
+                // give the hitter and pitcher a double
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addDouble();
+                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addDoubleAllowed();
 
                 // give the pitcher a hit
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
@@ -234,8 +236,9 @@ public class Game implements Serializable {
             }
 
             case 3 -> {
-                // give the hitter a triple
+                // give the hitter and pitcher a triple
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addTriple();
+                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addTripleAllowed();
 
                 // give the pitcher a hit
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
@@ -291,8 +294,9 @@ public class Game implements Serializable {
     public void hit(int amount) {
         switch (amount) {
             case 1 -> {
-                // give the hitter a single
+                // give the hitter and pitcher a single
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addSingle();
+                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addSingleAllowed();
 
                 // give the pitcher a hit
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
@@ -304,8 +308,9 @@ public class Game implements Serializable {
             }
 
             case 2 -> {
-                // give the hitter a double
+                // give the hitter and pitcher a double
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addDouble();
+                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addDoubleAllowed();
 
                 // give the pitcher a hit
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
@@ -324,6 +329,8 @@ public class Game implements Serializable {
         outs++;
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addInningPitched();
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addStrikeOut();
+        gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].addStrikeout();
+
         nextBatter(currentTeamPitchingIndex == 1 ? 0 : 1);
         if (outs == 3) {
             inning++;
@@ -758,7 +765,12 @@ public class Game implements Serializable {
 
         // set all pitching awards except saves and win/losses
         for (int i = 0; i < 2; i++) {
-            // complete game
+            // games finished
+            if (!lineups.get(i).get(currentPitcherIndex[i]).equals(startingPitcher[i])) {
+                gameStats[i][currentPitcherIndex[i]].addGameFinished();
+            }
+
+            // complete games
             if (gameStats[i][currentPitcherIndex[i]].getInningsPitched() == (double) inning / 2) {
                 gameStats[i][currentPitcherIndex[i]].addCompleteGame();
             }

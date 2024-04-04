@@ -1,18 +1,16 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentListener;
 import java.io.*;
 import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AppFrame extends JFrame implements ActionListener {
+    // all components that cause actions in AppFrame
     Season currentSeason;
     Team currentRoster;
     Game currentGame;
@@ -134,7 +132,8 @@ public class AppFrame extends JFrame implements ActionListener {
     JComboBox<Player> holdsTeam1;
     JComboBox<Player> holdsTeam2;
 
-    // other stuff for manual enter
+    // stats components
+
 
 
     // Creates an AllFiles object and loads save data from file if it exists
@@ -547,6 +546,19 @@ public class AppFrame extends JFrame implements ActionListener {
             daisyCruiser.setSelected(true);
         }
 
+        // lower, edit lineups 1 and 2 from rosters
+        JPanel lineupsPanel = new JPanel();
+        lineupsPanel.setBackground(background);
+        lineupsPanel.setLayout(new GridLayout(1,2));
+        mainPanel.add(lineupsPanel);
+        editLineup1 = new JButton("Edit Lineup 1");
+        editLineup1.addActionListener(this);
+        lineupsPanel.add(editLineup1);
+        editLineup2 = new JButton("Edit Lineup 2");
+        editLineup2.addActionListener(this);
+        lineupsPanel.add(editLineup2);
+
+        // lock the game presets if it has already started
         if (currentGame.isHasStarted()) {
             day.setEnabled(false);
             night.setEnabled(false);
@@ -559,19 +571,9 @@ public class AppFrame extends JFrame implements ActionListener {
             luigiMansion.setEnabled(false);
             peachIceGardens.setEnabled(false);
             daisyCruiser.setEnabled(false);
+            editLineup1.setEnabled(false);
+            editLineup2.setEnabled(false);
         }
-
-        // lower, edit lineups 1 and 2 from rosters
-        JPanel lineupsPanel = new JPanel();
-        lineupsPanel.setBackground(background);
-        lineupsPanel.setLayout(new GridLayout(1,2));
-        mainPanel.add(lineupsPanel);
-        editLineup1 = new JButton("Edit Lineup 1");
-        editLineup1.addActionListener(this);
-        lineupsPanel.add(editLineup1);
-        editLineup2 = new JButton("Edit Lineup 2");
-        editLineup2.addActionListener(this);
-        lineupsPanel.add(editLineup2);
 
         add(mainPanel);
         setVisible(true);
@@ -1953,18 +1955,26 @@ public class AppFrame extends JFrame implements ActionListener {
             if (hitType.getSelectedItem() == null || "Single".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addSingle();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addSingleAllowed();
             }
             else if ("Double".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addDouble();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addDoubleAllowed();
             }
             else if ("Triple".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addTriple();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addTripleAllowed();
             }
             else if ("HomeRun".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addHomeRun();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addHomeRunAllowed();
             }
             else {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
