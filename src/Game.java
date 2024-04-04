@@ -121,7 +121,7 @@ public class Game implements Serializable {
     public void placePitcher(int teamIndex, Player player) {
         currentPitcher[teamIndex] = player;
         currentPitcherIndex[teamIndex] = lineups.get(teamIndex).indexOf(player);
-        gameStats[teamIndex][8].addGamePitched();
+        gameStats[teamIndex][currentPitcherIndex[teamIndex]].addGamePitched();
     }
 
     public void nextBatter(int teamIndex) {
@@ -149,7 +149,6 @@ public class Game implements Serializable {
             case 0 -> {
                 outs++;
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addInningPitched();
-                System.out.println(gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].getInningsPitched());
                 nextBatter(currentTeamPitchingIndex == 1 ? 0 : 1);
                 if (outs == 3) {
                     inning++;
@@ -170,6 +169,7 @@ public class Game implements Serializable {
             case 1 -> {
                 // give the hitter and pitcher a single
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addSingle();
+                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHit();
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addSingleAllowed();
 
                 // give the pitcher a hit
@@ -203,6 +203,7 @@ public class Game implements Serializable {
             case 2 -> {
                 // give the hitter and pitcher a double
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addDouble();
+                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHit();
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addDoubleAllowed();
 
                 // give the pitcher a hit
@@ -239,6 +240,7 @@ public class Game implements Serializable {
             case 3 -> {
                 // give the hitter and pitcher a triple
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addTriple();
+                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHit();
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addTripleAllowed();
 
                 // give the pitcher a hit
@@ -279,10 +281,12 @@ public class Game implements Serializable {
             case 4 -> {
                 // give the hitter a home run
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHomeRun();
+                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHit();
 
                 // give the pitcher a hit and a home run allowed
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addHomeRunAllowed();
+                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addEarnedRun();
 
                 // advance since as is the same for either runner advance style
                 advance(-1, 4, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
@@ -297,6 +301,7 @@ public class Game implements Serializable {
             case 1 -> {
                 // give the hitter and pitcher a single
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addSingle();
+                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHit();
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addSingleAllowed();
 
                 // give the pitcher a hit
@@ -311,6 +316,7 @@ public class Game implements Serializable {
             case 2 -> {
                 // give the hitter and pitcher a double
                 gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addDouble();
+                gameStats[currentTeamPitchingIndex == 1 ? 0 : 1][currentBatterIndex[currentTeamPitchingIndex == 1 ? 0 : 1]].addHit();
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addDoubleAllowed();
 
                 // give the pitcher a hit
@@ -329,7 +335,6 @@ public class Game implements Serializable {
         // update stats
         outs++;
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addInningPitched();
-        System.out.println(gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].getInningsPitched());
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addStrikeOut();
         gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].addStrikeout();
 
@@ -679,7 +684,6 @@ public class Game implements Serializable {
 
         outs++;
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addInningPitched();
-        System.out.println(gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].getInningsPitched());
         if (outs == 3) {
             inning++;
             outs = 0;

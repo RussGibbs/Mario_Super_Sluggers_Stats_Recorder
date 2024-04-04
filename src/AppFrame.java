@@ -132,10 +132,6 @@ public class AppFrame extends JFrame implements ActionListener {
     JComboBox<Player> holdsTeam1;
     JComboBox<Player> holdsTeam2;
 
-    // stats components
-
-
-
     // Creates an AllFiles object and loads save data from file if it exists
     AllFiles allFiles = loadFromFile("seasons.xml");
 
@@ -1878,7 +1874,7 @@ public class AppFrame extends JFrame implements ActionListener {
         }
 
         if (steal.isSelected()) {
-            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
                     [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
                     .indexOf((Player) stealBox.getSelectedItem())].addSteal();
         }
@@ -1958,26 +1954,36 @@ public class AppFrame extends JFrame implements ActionListener {
             if (hitType.getSelectedItem() == null || "Single".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addSingle();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]].addHit();
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addSingleAllowed();
             }
             else if ("Double".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addDouble();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]].addHit();
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addDoubleAllowed();
             }
             else if ("Triple".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addTriple();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]].addHit();
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addTripleAllowed();
             }
             else if ("HomeRun".equals(hitType.getSelectedItem())) {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addHomeRun();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]
+                        [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 1 ? 0 : 1]].addHit();
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addHomeRunAllowed();
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRun();
             }
             else {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
@@ -2070,6 +2076,15 @@ public class AppFrame extends JFrame implements ActionListener {
 
         if (e.getSource() == deleteGameYes) {
             mainPanel.setVisible(false);
+
+            for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
+                currentGame.getLineups().get(0).get(i).removeStats(currentGame.getGameStats()[0][i]);
+            }
+
+            for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
+                currentGame.getLineups().get(1).get(i).removeStats(currentGame.getGameStats()[1][i]);
+            }
+
             currentSeason.getGames().remove(currentGame);
             loadSeason(currentSeason, "Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1));
         }

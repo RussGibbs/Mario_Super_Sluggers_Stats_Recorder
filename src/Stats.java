@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class Stats implements Serializable {
     // batting stats
@@ -467,12 +468,15 @@ public class Stats implements Serializable {
     }
 
     public void addInningPitched() {
-        if (inningsPitched % 1 <= 0.11 || inningsPitched % 1 >= 0.99) {
-            inningsPitched += 0.1;
+        DecimalFormat format = new DecimalFormat("#.#");
+        if (inningsPitched % 1 > 0.19) {
+            inningsPitched += 0.8;
+
         }
         else {
-            inningsPitched += 0.8;
+            inningsPitched += 0.1;
         }
+        inningsPitched = Double.parseDouble(format.format(getInningsPitched()));
     }
 
     public void addNoHitter() {
