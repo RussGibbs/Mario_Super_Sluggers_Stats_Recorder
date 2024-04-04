@@ -1,13 +1,15 @@
 import java.io.Serializable;
 
+
+// class Player represents a player
 public class Player implements Serializable {
     // attributes
     private String name;
     private String defensePosition;
     private String pitch;
-    private Stats stats;
+    private final Stats stats;
 
-    // constructors
+    // constructor
     public Player() {
         name = "";
         defensePosition = "";
@@ -19,6 +21,7 @@ public class Player implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
     public void setDefensePosition(String defensePosition) {
         this.defensePosition = defensePosition;
     }
@@ -27,14 +30,11 @@ public class Player implements Serializable {
         this.pitch = pitch;
     }
 
-    public void setStats(Stats stats) {
-        this.stats = stats;
-    }
-
     // getter methods
     public String getName() {
         return name;
     }
+
     public String getDefensePosition() {
         return defensePosition;
     }
@@ -47,12 +47,13 @@ public class Player implements Serializable {
         return stats;
     }
 
+    // toString method
     @Override
     public String toString() {
         return name;
     }
 
-    // combine stats
+    // methods to combine player stats with another stats
     public void combineStats(Stats stats) {
         this.stats.addGamesPlayed(stats.getGamesPlayed());
         this.stats.addAtBats(stats.getAtBats());

@@ -1,26 +1,26 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
+
+// class Team contains a team of players
 public class Team implements Serializable {
     // attributes
     private ArrayList<Player> players;
 
-    // constructors
+    // constructor
     public Team() {
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
     }
 
     // setter methods
-    public void addPlayer() {
-        players.add(new Player());
-    }
-
     public void addPlayer(Player player) {
         players.add(player);
     }
+
     public void setPlayers(ArrayList<Player> players) {
         this.players = players;
     }
+
     public void setPlayer(int playerIndex, Player player) {
         players.set(playerIndex, player);
     }
@@ -31,6 +31,7 @@ public class Team implements Serializable {
         player.setName(playerName);
         players.set(playerIndex, player);
     }
+
     public void setDefensePosition(int playerIndex, String defensePosition) {
         Player player = players.get(playerIndex);
         player.setDefensePosition(defensePosition);
@@ -41,6 +42,7 @@ public class Team implements Serializable {
     public ArrayList<Player> getPlayers() {
         return players;
     }
+
     public Player getPlayer(int playerIndex) {
         return players.get(playerIndex);
     }
@@ -49,6 +51,7 @@ public class Team implements Serializable {
     public String getPlayerName(int playerIndex) {
         return players.get(playerIndex).getName();
     }
+
     public String getDefensePosition(int playerIndex) {
         return players.get(playerIndex).getDefensePosition();
     }

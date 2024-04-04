@@ -1,6 +1,8 @@
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
+
+// class Stats contains all the recorded stats
 public class Stats implements Serializable {
     // batting stats
     private int gamesPlayed;
@@ -13,7 +15,6 @@ public class Stats implements Serializable {
     private int doubles;
     private int triples;
     private int homeRuns;
-
     private int hitterWalks;
     private int sacrifices;
     private int plateAppearances;
@@ -37,16 +38,16 @@ public class Stats implements Serializable {
     private int shutOuts;
     private int noHitters;
     private int perfectGames;
-
     private int pitcherWalks;
     private int pitcherHits;
     private int earnedRuns;
 
-    // Misc
+    // misc stats
     private int steals;
     private int caughtStealing;
     private int errors;
 
+    // constructor
     public Stats() {
         gamesPlayed = 0;
         atBats = 0;
@@ -91,9 +92,7 @@ public class Stats implements Serializable {
         errors = 0;
     }
 
-    // getters
-
-
+    // getter methods
     public int getDoublesAllowed() {
         return doublesAllowed;
     }
@@ -101,7 +100,6 @@ public class Stats implements Serializable {
     public int getGamesFinished() {
         return gamesFinished;
     }
-
 
     public int getStrikeouts() {
         return strikeouts;
@@ -243,7 +241,7 @@ public class Stats implements Serializable {
         return sacrifices;
     }
 
-    // Setters
+    // setter methods
     public void setDoublesAllowed(int doublesAllowed) {
         this.doublesAllowed = doublesAllowed;
     }
@@ -364,8 +362,6 @@ public class Stats implements Serializable {
         this.triples = triples;
     }
 
-
-
     public void setEarnedRuns(int earnedRuns) {
         this.earnedRuns = earnedRuns;
     }
@@ -394,9 +390,7 @@ public class Stats implements Serializable {
         this.sacrifices = sacrifices;
     }
 
-
-
-    // adders
+    // adder methods
     public void addDoubleAllowed() {
         this.doublesAllowed ++;
     }
@@ -416,6 +410,7 @@ public class Stats implements Serializable {
     public void addTripleAllowed() {
         this.triplesAllowed ++;
     }
+
     public void addHomeRunAllowed() {
         homeRunsAllowed++;
     }
@@ -423,6 +418,7 @@ public class Stats implements Serializable {
     public void addCaughtStealing() {
         caughtStealing++;
     }
+
     public void addSaveOpportunity() {
         saveOpportunities++;
     }
@@ -430,9 +426,11 @@ public class Stats implements Serializable {
     public void addHold() {
         holds++;
     }
+
     public void addCompleteGame() {
         completeGames++;
     }
+
     public void addWin() {
         wins++;
     }
@@ -440,6 +438,7 @@ public class Stats implements Serializable {
     public void addLoss() {
         losses++;
     }
+
     public void addGamePitched() {
         gamesPitched++;
     }
@@ -447,6 +446,7 @@ public class Stats implements Serializable {
     public void addGamePlayed() {
         gamesPlayed++;
     }
+
     public void addAtBat() {
         atBats++;
     }
@@ -547,7 +547,7 @@ public class Stats implements Serializable {
         sacrifices++;
     }
 
-    // combiners
+    // combiner methods
     public void addDoublesAllowed(int doublesAllowed) {
         this.doublesAllowed += doublesAllowed;
     }
@@ -567,6 +567,7 @@ public class Stats implements Serializable {
     public void addTriplesAllowed(int triplesAllowed) {
         this.triplesAllowed += triplesAllowed;
     }
+
     public void addHomeRunsAllowed(int homeRunsAllowed) {
         this.homeRunsAllowed += homeRunsAllowed;
     }
@@ -574,6 +575,7 @@ public class Stats implements Serializable {
     public void addCaughtStealing(int caughtStealing) {
         this.caughtStealing += caughtStealing;
     }
+
     public void addSaveOpportunities(int saveOpportunities) {
         this.saveOpportunities = saveOpportunities;
     }
@@ -581,9 +583,11 @@ public class Stats implements Serializable {
     public void addHolds(int holds) {
         this.holds = holds;
     }
+
     public void addCompleteGames(int completeGames) {
         this.completeGames += completeGames;
     }
+
     public void addWins(int wins) {
         this.wins += wins;
     }
@@ -591,6 +595,7 @@ public class Stats implements Serializable {
     public void addLosses(int losses) {
         this.losses += losses;
     }
+
     public void addGamesPitched(int gamesPitched) {
         this.gamesPitched += gamesPitched;
     }
@@ -598,6 +603,7 @@ public class Stats implements Serializable {
     public void addGamesPlayed(int gamesPlayed) {
         this.gamesPlayed += gamesPlayed;
     }
+
     public void addAtBats(int atBats) {
         this.atBats += atBats;
     }

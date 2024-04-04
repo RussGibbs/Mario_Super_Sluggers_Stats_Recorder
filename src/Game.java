@@ -602,6 +602,8 @@ public class Game implements Serializable {
     // contains finishing logic
     public void finishGame() {
         inning--; // in order to make the innings not overflow
+        gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPlateAppearances(-1);
+        gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentPitcherIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].addPlateAppearances(-1);
 
         // set who won
         if (score[1] > score[0]) {
