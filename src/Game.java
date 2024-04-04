@@ -126,13 +126,13 @@ public class Game implements Serializable {
 
     public void nextBatter(int teamIndex) {
         gameStats[teamIndex][currentBatterIndex[teamIndex]].addAtBat();
+        gameStats[teamIndex][currentBatterIndex[teamIndex]].addPlateAppearance();
         if (currentBatterIndex[teamIndex] == 8) {
             currentBatterIndex[teamIndex] = 0;
         } else {
             currentBatterIndex[teamIndex]++;
         }
         currentBatter[teamIndex] = lineups.get(teamIndex).get(currentBatterIndex[teamIndex]);
-        gameStats[teamIndex][currentBatterIndex[teamIndex]].addPlateAppearance();
     }
 
     // at Bat events
@@ -762,8 +762,6 @@ public class Game implements Serializable {
 
     public void finishGame() {
         inning--; // in order to make the innings not overflow
-        gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].setPlateAppearances(
-                gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].getPlateAppearances() - 1);
 
         // set who won
         if (score[1] > score[0]) {

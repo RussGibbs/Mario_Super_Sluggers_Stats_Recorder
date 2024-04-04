@@ -16,8 +16,4 @@ public class Main {
     // loading lineups
     // add spreadsheet to the gui
     // undo
-
-
-    // add outs to Hitter stats
-    // home runs add home run earned to the pitcher
 }
