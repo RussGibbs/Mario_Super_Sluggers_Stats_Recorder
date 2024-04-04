@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -9,8 +8,10 @@ import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.ArrayList;
 
+
+// class AppFrame consists of the GUI that powers the application
 public class AppFrame extends JFrame implements ActionListener {
-    // all components that cause actions in AppFrame
+    // currently loaded information
     Season currentSeason;
     Team currentRoster;
     Game currentGame;
@@ -18,6 +19,7 @@ public class AppFrame extends JFrame implements ActionListener {
     int currentRosterIndex;
     int currentTeamIndex;
 
+    // all components that cause actions in AppFrame
     Color background;
     JPanel mainPanel;
     JButton home;
@@ -63,7 +65,6 @@ public class AppFrame extends JFrame implements ActionListener {
     ArrayList<JComboBox<Player>> playerJComboBox;
     JComboBox<Player> pitchJComboBox;
     JCheckBox pitchesFirst;
-
     JButton strikeOut;
     JButton out;
     JButton singleHit;
@@ -75,13 +76,11 @@ public class AppFrame extends JFrame implements ActionListener {
     JButton walk;
     JButton changePitcher;
     JButton other;
-
     JRadioButton firstBase;
     JRadioButton secondBase;
     JRadioButton thirdBase;
     JRadioButton out1;
     JRadioButton out2;
-
     JButton saveCustomEvent;
     JCheckBox advanceBattingOrder;
     JCheckBox error;
@@ -109,16 +108,13 @@ public class AppFrame extends JFrame implements ActionListener {
     JCheckBox hitPitcher;
     JCheckBox hitBatter;
     JComboBox<String> hitType;
-
     ChangeListener batterListener;
     ChangeListener firstListener;
     ChangeListener secondListener;
     ChangeListener thirdListener;
-
     JButton cancel;
     JButton saveEditedPitcher;
     JComboBox<Player> changePitcherBox;
-
     JButton closeGame;
     JButton suspendFinish;
     JComboBox<Player> savesTeam1;
@@ -135,12 +131,15 @@ public class AppFrame extends JFrame implements ActionListener {
     // Creates an AllFiles object and loads save data from file if it exists
     AllFiles allFiles = loadFromFile("seasons.xml");
 
+    // Constructor to create AppFrame
     public AppFrame() throws IOException, ClassNotFoundException {
+        // default window
         setSize(1200, 800);
         background = new Color(0xaacccc);
         loadHome();
     }
 
+    // loads home screen
     public void loadHome() {
         setTitle("Mario Super Sluggers Stats Recorder");
         mainPanel = new JPanel();
@@ -168,7 +167,7 @@ public class AppFrame extends JFrame implements ActionListener {
         cells[1][0].add(newSeason);
         newSeason.addActionListener(this);
 
-        loadSeason = new ArrayList<JButton>();
+        loadSeason = new ArrayList<>();
         for (int i = 0; i < allFiles.getSeasons().size(); i++) {
             JButton jButton = new JButton(("Load Season " + (i + 1)));
             loadSeason.add(jButton);
@@ -180,6 +179,8 @@ public class AppFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
+
+    // loads season screen
     public void loadSeason(Season season, String title) {
         setTitle(title);
         mainPanel = new JPanel();
@@ -242,7 +243,7 @@ public class AppFrame extends JFrame implements ActionListener {
         gamePanel.setLayout(new FlowLayout());
         mainPanel.add(gamePanel);
 
-        loadGame = new ArrayList<JButton>();
+        loadGame = new ArrayList<>();
         for (int i = 0; i < season.getGames().size(); i++) {
             JButton jButton = new JButton(("Load Game " + (i + 1)));
             loadGame.add(jButton);
@@ -272,7 +273,9 @@ public class AppFrame extends JFrame implements ActionListener {
         add(mainPanel);
         setVisible(true);
     }
-    public void loadDeleteSeason(Season season, String seasonTitle) {
+
+    // loads delete season screen
+    public void loadDeleteSeason(String seasonTitle) {
         setTitle("Erase Season " + seasonTitle);
         mainPanel = new JPanel();
         mainPanel.setBackground(background);
@@ -302,7 +305,9 @@ public class AppFrame extends JFrame implements ActionListener {
         add(mainPanel);
         setVisible(true);
     }
-    public void loadEditRoster(Team team, String title) {
+
+    // loads edit roster screen
+    public void loadEditRoster(String title) {
         setTitle(title);
         mainPanel = new JPanel();
         mainPanel.setBackground(background);
@@ -399,7 +404,9 @@ public class AppFrame extends JFrame implements ActionListener {
         add(mainPanel);
         setVisible(true);
     }
-    public void loadGame(Game game, String title) {
+
+    // loads game screen
+    public void loadGame(String title) {
         setTitle(title);
         mainPanel = new JPanel();
         mainPanel.setBackground(background);
@@ -511,35 +518,25 @@ public class AppFrame extends JFrame implements ActionListener {
             bjPlayroom.setEnabled(false);
         }
 
-        if (currentGame.getStadium().equals("Mario Stadium")) {
-            marioStadium.setSelected(true);
-        }
-        else if (currentGame.getStadium().equals("Yoshi Park")) {
-            yoshiPark.setSelected(true);
-        }
-        else if (currentGame.getStadium().equals("Wario City")) {
-            warioCity.setSelected(true);
-        }
-        else if (currentGame.getStadium().equals("DK Jungle")) {
-            dkJungle.setSelected(true);
-        }
-        else if (currentGame.getStadium().equals("Bowser Jr Playroom")) {
-            bjPlayroom.setSelected(true);
-            night.setEnabled(false);
-        }
-        else if (currentGame.getStadium().equals("Peach Ice Gardens")) {
-            peachIceGardens.setSelected(true);
-        }
-        else if (currentGame.getStadium().equals("Bowser Castle")) {
-            bowserCastle.setSelected(true);
-            day.setEnabled(false);
-        }
-        else if (currentGame.getStadium().equals("Luigi Mansion")) {
-            luigiMansion.setSelected(true);
-            day.setEnabled(false);
-        }
-        else if (currentGame.getStadium().equals("Daisy Cruiser")) {
-            daisyCruiser.setSelected(true);
+        switch (currentGame.getStadium()) {
+            case "Mario Stadium" -> marioStadium.setSelected(true);
+            case "Yoshi Park" -> yoshiPark.setSelected(true);
+            case "Wario City" -> warioCity.setSelected(true);
+            case "DK Jungle" -> dkJungle.setSelected(true);
+            case "Bowser Jr Playroom" -> {
+                bjPlayroom.setSelected(true);
+                night.setEnabled(false);
+            }
+            case "Peach Ice Gardens" -> peachIceGardens.setSelected(true);
+            case "Bowser Castle" -> {
+                bowserCastle.setSelected(true);
+                day.setEnabled(false);
+            }
+            case "Luigi Mansion" -> {
+                luigiMansion.setSelected(true);
+                day.setEnabled(false);
+            }
+            case "Daisy Cruiser" -> daisyCruiser.setSelected(true);
         }
 
         // lower, edit lineups 1 and 2 from rosters
@@ -574,7 +571,9 @@ public class AppFrame extends JFrame implements ActionListener {
         add(mainPanel);
         setVisible(true);
     }
-    public void loadDeleteGame(Game game, String gameTitle) {
+
+    // loads delete game screen
+    public void loadDeleteGame(String gameTitle) {
         setTitle("Erase Game " + gameTitle);
         mainPanel = new JPanel();
         mainPanel.setBackground(background);
@@ -604,7 +603,9 @@ public class AppFrame extends JFrame implements ActionListener {
         add(mainPanel);
         setVisible(true);
     }
-    public void loadEditLineup(Team team, String title) {
+
+    // loads edit lineup screen
+    public void loadEditLineup(String title) {
         setTitle(title);
         mainPanel = new JPanel();
         mainPanel.setBackground(background);
@@ -655,7 +656,7 @@ public class AppFrame extends JFrame implements ActionListener {
         pitchesFirstPanel.add(pitchesFirst);
         pitchesFirst.setSelected(thisTeamPitchesFirst);
 
-        // middle, jcomboboxes for lineup
+        // middle, JComboBoxes for lineup
         JPanel middle = new JPanel();
         middle.setBackground(background);
         middle.setLayout(new GridLayout(2, 1));
@@ -671,9 +672,9 @@ public class AppFrame extends JFrame implements ActionListener {
         lineupPanel.setLayout(new FlowLayout());
         middle.add(lineupPanel);
 
-        playerJComboBox = new ArrayList<JComboBox<Player>>();
+        playerJComboBox = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            JComboBox<Player> jComboBox = new JComboBox<Player>();
+            JComboBox<Player> jComboBox = new JComboBox<>();
             for (int j = 0; j < currentRoster.getPlayers().size(); j++) {
                 jComboBox.addItem(currentRoster.getPlayer(j));
             }
@@ -691,7 +692,7 @@ public class AppFrame extends JFrame implements ActionListener {
         }
 
 
-        // bottom, jcombobox for starting pitcher
+        // bottom, JComboBox for starting pitcher
         JPanel bottom = new JPanel();
         bottom.setBackground(background);
         bottom.setLayout(new GridLayout(2, 1));
@@ -707,7 +708,7 @@ public class AppFrame extends JFrame implements ActionListener {
         pitchPanel.setLayout(new FlowLayout());
         bottom.add(pitchPanel);
 
-        pitchJComboBox = new JComboBox<Player>();
+        pitchJComboBox = new JComboBox<>();
         for (int i = 0; i < currentRoster.getPlayers().size(); i++) {
             pitchJComboBox.addItem(currentRoster.getPlayer(i));
         }
@@ -722,10 +723,11 @@ public class AppFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    // loads end of game screen
     public void loadGameFinish() {
         if (currentGame.isHasClosed()) {
             mainPanel.setVisible(false);
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
         else {
             setTitle("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
@@ -893,6 +895,7 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
+    // applies data from end of game screen to game stats
     public void saveGameClose() {
         // saves
         if (savesTeam1.getSelectedItem() != null) {
@@ -942,8 +945,9 @@ public class AppFrame extends JFrame implements ActionListener {
         // add all data to players
         currentGame.finishGame();
     }
-    // write enter game
-    public void enterGame(Game game, String title) {
+
+    // loads interactive game simulation screen
+    public void enterGame(String title) {
         if (!currentGame.isHasStarted()) {
             currentGame.startGame();
         }
@@ -1193,6 +1197,8 @@ public class AppFrame extends JFrame implements ActionListener {
             setVisible(true);
         }
     }
+
+    // loads invalid game creation screen
     public void loadGameError() {
         setTitle("Error");
         mainPanel = new JPanel();
@@ -1222,6 +1228,7 @@ public class AppFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    // loads change pitcher screen
     public void loadChangePitcher(String title) {
         setTitle(title);
         mainPanel = new JPanel();
@@ -1265,7 +1272,7 @@ public class AppFrame extends JFrame implements ActionListener {
         mainPanel.add(pitcherSelectPanel);
 
         pitcherSelectPanel.add(new JLabel("Pitcher: "));
-        changePitcherBox = new JComboBox<Player>();
+        changePitcherBox = new JComboBox<>();
         for (int i = 0; i < currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex()).size(); i++) {
             changePitcherBox.addItem(currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex()).get(i));
         }
@@ -1276,6 +1283,7 @@ public class AppFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    // loads custom play menu for interactive game simulation
     public void loadOther(String title) {
         setTitle(title);
         mainPanel = new JPanel();
@@ -1484,14 +1492,11 @@ public class AppFrame extends JFrame implements ActionListener {
             advanceBatter = new JSpinner(model);
 
             if (batterListener == null) {
-                batterListener = new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        outCheckBox = null;
-                        strikeoutCheckBox = null;
-                        mainPanel.setVisible(false);
-                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
-                    }
+                batterListener = e -> {
+                    outCheckBox = null;
+                    strikeoutCheckBox = null;
+                    mainPanel.setVisible(false);
+                    loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
                 };
             }
 
@@ -1554,13 +1559,10 @@ public class AppFrame extends JFrame implements ActionListener {
             advanceFirst = new JSpinner(model);
 
             if (firstListener == null) {
-                firstListener = new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        firstBaseOut = null;
-                        mainPanel.setVisible(false);
-                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
-                    }
+                firstListener = e -> {
+                    firstBaseOut = null;
+                    mainPanel.setVisible(false);
+                    loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
                 };
             }
 
@@ -1632,13 +1634,10 @@ public class AppFrame extends JFrame implements ActionListener {
             advanceSecond = new JSpinner(model);
 
             if (secondListener == null) {
-                secondListener = new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        secondBaseOut = null;
-                        mainPanel.setVisible(false);
-                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
-                    }
+                secondListener = e -> {
+                    secondBaseOut = null;
+                    mainPanel.setVisible(false);
+                    loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
                 };
             }
 
@@ -1708,13 +1707,10 @@ public class AppFrame extends JFrame implements ActionListener {
             advanceThird = new JSpinner(model);
 
             if (thirdListener == null) {
-                thirdListener = new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        thirdBaseOut = null;
-                        mainPanel.setVisible(false);
-                        loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
-                    }
+                thirdListener = e -> {
+                    thirdBaseOut = null;
+                    mainPanel.setVisible(false);
+                    loadOther("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Other");
                 };
             }
 
@@ -1827,6 +1823,8 @@ public class AppFrame extends JFrame implements ActionListener {
         add(mainPanel);
         setVisible(true);
     }
+
+    // saves all data to file "seasons.xml"
     public void save() {
         try {
             writeToFile(allFiles, "seasons.xml");
@@ -1835,6 +1833,7 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
+    // applies data from custom play menu to interactive game simulation
     public void saveOther() {
         if (advanceBattingOrder.isSelected()) {
             currentGame.nextBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
@@ -1993,6 +1992,8 @@ public class AppFrame extends JFrame implements ActionListener {
             }
         }
     }
+
+    // contains the result of all action events
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == home) {
@@ -2022,7 +2023,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
         if (e.getSource() == deleteSeason) {
             mainPanel.setVisible(false);
-            loadDeleteSeason(currentSeason, "" + (allFiles.getSeasons().indexOf(currentSeason) + 1));
+            loadDeleteSeason(Integer.toString(allFiles.getSeasons().indexOf(currentSeason) + 1));
         }
 
         if (e.getSource() == deleteSeasonNo) {
@@ -2048,7 +2049,7 @@ public class AppFrame extends JFrame implements ActionListener {
                 currentGame.setStartingPitcher(0, currentSeason.getRoster(0).getPlayer(0));
                 currentGame.setStartingPitcher(1, currentSeason.getRoster(1).getPlayer(0));
                 loadGame.add(new JButton());
-                loadGame(currentSeason.getGame(currentSeason.getGames().size() - 1), "Game " + currentSeason.getGames().size());
+                loadGame("Game " + currentSeason.getGames().size());
             }
             else {
                 mainPanel.setVisible(false);
@@ -2060,18 +2061,18 @@ public class AppFrame extends JFrame implements ActionListener {
             if (e.getSource() == loadGame.get(i)) {
                 mainPanel.setVisible(false);
                 currentGame = currentSeason.getGame(i);
-                loadGame(currentSeason.getGame(i), "Game " + (i + 1));
+                loadGame("Game " + (i + 1));
             }
         }
 
         if (e.getSource() == deleteGame) {
             mainPanel.setVisible(false);
-            loadDeleteGame(currentGame, "" + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadDeleteGame(Integer.toString(currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == deleteGameNo) {
             mainPanel.setVisible(false);
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == deleteGameYes) {
@@ -2096,73 +2097,73 @@ public class AppFrame extends JFrame implements ActionListener {
 
         if (e.getSource() == enterGame) {
             mainPanel.setVisible(false);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == day) {
             mainPanel.setVisible(false);
             currentGame.setTimeOfDay("Day");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == night) {
             mainPanel.setVisible(false);
             currentGame.setTimeOfDay("Night");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == marioStadium) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Mario Stadium");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == yoshiPark) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Yoshi Park");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == warioCity) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Wario City");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == dkJungle) {
             mainPanel.setVisible(false);
             currentGame.setStadium("DK Jungle");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == bjPlayroom) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Bowser Jr Playroom");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == peachIceGardens) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Peach Ice Gardens");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == bowserCastle) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Bowser Castle");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == luigiMansion) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Luigi Mansion");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == daisyCruiser) {
             mainPanel.setVisible(false);
             currentGame.setStadium("Daisy Cruiser");
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == editLineup1) {
@@ -2171,7 +2172,7 @@ public class AppFrame extends JFrame implements ActionListener {
             currentRosterIndex = 0;
             currentTeam = currentGame.getTeam(0);
             currentTeamIndex = 0;
-            loadEditLineup(currentGame.getTeam(0), "Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Lineup 1");
+            loadEditLineup("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Lineup 1");
         }
 
         if (e.getSource() == editLineup2) {
@@ -2180,7 +2181,7 @@ public class AppFrame extends JFrame implements ActionListener {
             currentRosterIndex = 1;
             currentTeam = currentGame.getTeam(1);
             currentTeamIndex = 1;
-            loadEditLineup(currentGame.getTeam(1), "Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Lineup 2");
+            loadEditLineup("Game " + (currentSeason.getGames().indexOf(currentGame) + 1) + " - Lineup 2");
         }
 
         if (e.getSource() == save2) {
@@ -2198,7 +2199,7 @@ public class AppFrame extends JFrame implements ActionListener {
             }
             currentGame.setStartingPitcher(currentTeamIndex, (Player) pitchJComboBox.getSelectedItem());
             save();
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == pitchesFirst) {
@@ -2209,14 +2210,14 @@ public class AppFrame extends JFrame implements ActionListener {
             mainPanel.setVisible(false);
             currentRoster = currentSeason.getRoster(0);
             currentRosterIndex = 0;
-            loadEditRoster(currentSeason.getRoster(0), "Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster 1");
+            loadEditRoster("Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster 1");
         }
 
         if (e.getSource() == editRoster2) {
             mainPanel.setVisible(false);
             currentRoster = currentSeason.getRoster(1);
             currentRosterIndex = 1;
-            loadEditRoster(currentSeason.getRoster(1), "Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster 2");
+            loadEditRoster("Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster 2");
         }
 
         if (e.getSource() == saveEditedRoster) {
@@ -2233,26 +2234,26 @@ public class AppFrame extends JFrame implements ActionListener {
 
             currentSeason.addPlayer(currentRosterIndex, player);
             mainPanel.setVisible(false);
-            loadEditRoster(currentRoster, "Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster " + (currentRosterIndex + 1));
+            loadEditRoster("Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster " + (currentRosterIndex + 1));
         }
 
         if (e.getSource() == resetRoster) {
             currentSeason.setRoster(new Team(), currentRosterIndex);
             currentRoster = currentSeason.getRoster(currentRosterIndex);
             mainPanel.setVisible(false);
-            loadEditRoster(currentRoster, "Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster " + (currentRosterIndex + 1));
+            loadEditRoster("Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster " + (currentRosterIndex + 1));
         }
 
         if (e.getSource() == deleteLastEntry) {
             currentSeason.getRoster(currentRosterIndex).getPlayers().remove(currentSeason.getRoster(currentRosterIndex).getPlayers().size() - 1);
             mainPanel.setVisible(false);
-            loadEditRoster(currentRoster, "Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster " + (currentRosterIndex + 1));
+            loadEditRoster("Season " + (allFiles.getSeasons().indexOf(currentSeason) + 1) + " - Roster " + (currentRosterIndex + 1));
         }
 
         if (e.getSource() == saveGame) {
             mainPanel.setVisible(false);
             save();
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == changePitcher) {
@@ -2264,55 +2265,55 @@ public class AppFrame extends JFrame implements ActionListener {
         if (e.getSource() == strikeOut) {
             mainPanel.setVisible(false);
             currentGame.strikeOut();
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == out) {
             mainPanel.setVisible(false);
             currentGame.hitAdvance(0);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == singleHit) {
             mainPanel.setVisible(false);
             currentGame.hit(1);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == singleHitAdvance) {
             mainPanel.setVisible(false);
             currentGame.hitAdvance(1);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == doubleHit) {
             mainPanel.setVisible(false);
             currentGame.hit(2);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == doubleHitAdvance) {
             mainPanel.setVisible(false);
             currentGame.hitAdvance(2);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == tripleHit) {
             mainPanel.setVisible(false);
             currentGame.hitAdvance(3);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == homeRunHit) {
             mainPanel.setVisible(false);
             currentGame.hitAdvance(4);
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == walk) {
             mainPanel.setVisible(false);
             currentGame.walk();
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == cancel) {
@@ -2350,14 +2351,14 @@ public class AppFrame extends JFrame implements ActionListener {
             secondListener = null;
             thirdListener = null;
 
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == saveEditedPitcher) {
             mainPanel.setVisible(false);
             currentGame.placePitcher(currentGame.getCurrentTeamPitchingIndex(), (Player) changePitcherBox.getSelectedItem());
             save();
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == other) {
@@ -2508,7 +2509,7 @@ public class AppFrame extends JFrame implements ActionListener {
             secondListener = null;
             thirdListener = null;
 
-            enterGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            enterGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == closeGame) {
@@ -2516,16 +2517,16 @@ public class AppFrame extends JFrame implements ActionListener {
             saveGameClose();
             currentGame.setHasClosed(true);
             save();
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
         if (e.getSource() == suspendFinish) {
             mainPanel.setVisible(false);
-            loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
+            loadGame("Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
     }
 
-    // Output AllFiles to file
+    // Outputs AllFiles to file
     public static void writeToFile(AllFiles allfiles, String fileName) throws IOException {
         FileOutputStream fos = new FileOutputStream(fileName);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -2533,7 +2534,7 @@ public class AppFrame extends JFrame implements ActionListener {
         oos.close();
     }
 
-    // Input AllFiles from file
+    // Inputs AllFiles from file
     public static AllFiles loadFromFile(String fileName) throws IOException, ClassNotFoundException {
         File file = new File("seasons.xml");
         if (file.exists() && !file.isDirectory()) {

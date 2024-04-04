@@ -1,14 +1,16 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
+
+// class Game contains the logic for the interactive simulation and stats recording
 public class Game implements Serializable {
     // attributes
     private ArrayList<Team> teams;
     private boolean gameResult;
     private String stadium;
     private String timeOfDay;
-    private Player[] startingPitcher;
-    private ArrayList<ArrayList<Player>> lineups;
+    private final Player[] startingPitcher;
+    private final ArrayList<ArrayList<Player>> lineups;
     private boolean pitchesFirst;
 
     private boolean hasStarted;
@@ -16,32 +18,30 @@ public class Game implements Serializable {
     private boolean hasClosed;
     private int inning;
     private int outs;
-    private int[] score;
-    private Player[] bases;
-    private Player[] earnedBases;
+    private final int[] score;
+    private final Player[] bases;
+    private final Player[] earnedBases;
 
-    private Player[] currentBatter;
-    private Player[] currentPitcher;
-    private int[] currentBatterIndex;
-    private int[] currentPitcherIndex;
+    private final Player[] currentBatter;
+    private final Player[] currentPitcher;
+    private final int[] currentBatterIndex;
+    private final int[] currentPitcherIndex;
     private int currentTeamPitchingIndex;
 
-    private boolean[] hasErrors;
+    private final Stats[][] gameStats;
 
-    private Stats[][] gameStats;
-
-    // constructors
+    // constructor
     public Game() {
-        teams = new ArrayList<Team>();
+        teams = new ArrayList<>();
         teams.add(new Team());
         teams.add(new Team());
         gameResult = true;
         stadium = "Mario Stadium";
         timeOfDay = "Day";
         startingPitcher = new Player[2];
-        lineups = new ArrayList<ArrayList<Player>>();
-        lineups.add(new ArrayList<Player>());
-        lineups.add(new ArrayList<Player>());
+        lineups = new ArrayList<>();
+        lineups.add(new ArrayList<>());
+        lineups.add(new ArrayList<>());
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 9; j++) {
                 lineups.get(i).add(null);
@@ -63,8 +63,6 @@ public class Game implements Serializable {
         currentPitcherIndex = new int[2];
         currentTeamPitchingIndex = 0;
 
-        hasErrors = new boolean[2];
-
         gameStats = new Stats[2][9];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 9; j++) {
@@ -73,7 +71,7 @@ public class Game implements Serializable {
         }
     }
 
-    // remember to check if the game is over
+    // starts the game simulation
     public void startGame() {
         hasStarted = true;
         // set to the current pitching team
@@ -118,12 +116,14 @@ public class Game implements Serializable {
         gameStats[1][0].addPlateAppearance();
     }
 
+    // places a new pitcher
     public void placePitcher(int teamIndex, Player player) {
         currentPitcher[teamIndex] = player;
         currentPitcherIndex[teamIndex] = lineups.get(teamIndex).indexOf(player);
         gameStats[teamIndex][currentPitcherIndex[teamIndex]].addGamePitched();
     }
 
+    // advances batters in the lineup
     public void nextBatter(int teamIndex) {
         gameStats[teamIndex][currentBatterIndex[teamIndex]].addAtBat();
         gameStats[teamIndex][currentBatterIndex[teamIndex]].addPlateAppearance();
@@ -135,14 +135,7 @@ public class Game implements Serializable {
         currentBatter[teamIndex] = lineups.get(teamIndex).get(currentBatterIndex[teamIndex]);
     }
 
-    // at Bat events
-    /*
-    0 = out
-    1 = single
-    2 = double
-    3 = triple
-    4 = home run
-     */
+    // contains hit logic with uniform advancement
     public void hitAdvance(int amount) {
         // give the current batter the corresponding hit
         switch (amount) {
@@ -248,32 +241,6 @@ public class Game implements Serializable {
 
                 // update the bases
                 advance(-1, 3, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
-                /*Player[] tempBases = new Player[3];
-                tempBases[0] = bases[0];
-                tempBases[1] = bases[1];
-                tempBases[2] = bases[2];
-
-                Player[] tempEarnedBases = new Player[3];
-                tempEarnedBases[0] = earnedBases[0];
-                tempEarnedBases[1] = earnedBases[1];
-                tempEarnedBases[2] = earnedBases[2];
-
-                bases[0] = null;
-                earnedBases[0] = null;
-                bases[1] = null;
-                earnedBases[1] = null;
-                bases[2] = currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0];
-                earnedBases[2] = currentPitcher[currentTeamPitchingIndex];
-
-                if (tempBases[0] != null) {
-                    score(tempBases[0], tempEarnedBases[0], currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
-                }
-                if (tempBases[1] != null) {
-                    score(tempBases[1], tempEarnedBases[1], currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
-                }
-                if (tempBases[2] != null) {
-                    score(tempBases[2], tempEarnedBases[2], currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
-                }*/
 
                 nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
             }
@@ -296,6 +263,7 @@ public class Game implements Serializable {
         }
     }
 
+    // contains hit logic with only forced advancement
     public void hit(int amount) {
         switch (amount) {
             case 1 -> {
@@ -330,6 +298,7 @@ public class Game implements Serializable {
         }
     }
 
+    // strikes out current batter
     public void strikeOut() {
         // update info
         // update stats
@@ -355,6 +324,7 @@ public class Game implements Serializable {
         }
     }
 
+    // clears all the bases
     public void clearBases() {
         bases[0] = null;
         bases[1] = null;
@@ -364,6 +334,7 @@ public class Game implements Serializable {
         earnedBases[2] = null;
     }
 
+    // walks the current batter
     public void walk() {
         // give the pitcher and hitter the walks, and remove an at bat
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherWalk();
@@ -400,6 +371,7 @@ public class Game implements Serializable {
         nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
     }
 
+    // scores a runner due to a pitcher and hitter
     public void score(Player runner, Player pitcher, Player hitter) {
         // add score to the scoreboard
         score[currentTeamPitchingIndex == 0 ? 1 : 0]++;
@@ -418,40 +390,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void addSteal(Player player) {
-        int[] playerIndex = new int[2];
-
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    playerIndex[0] = i;
-                    playerIndex[1] = j;
-                    break loop;
-                }
-            }
-        }
-
-        gameStats[playerIndex[0]][playerIndex[1]].addSteal();
-    }
-
-    public void addCaughtStealing(Player player) {
-        int[] playerIndex = new int[2];
-
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    playerIndex[0] = i;
-                    playerIndex[1] = j;
-                    break loop;
-                }
-            }
-        }
-
-        gameStats[playerIndex[0]][playerIndex[1]].addCaughtStealing();
-    }
-
+    // adds a run to a player
     public void addRun(Player player) {
         int[] playerIndex = new int[2];
 
@@ -469,46 +408,7 @@ public class Game implements Serializable {
         gameStats[playerIndex[0]][playerIndex[1]].addRun();
     }
 
-
-
-    public void addSacrifice(Player player) {
-        // remove an at bat
-        gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].setAtBats(
-                gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].getAtBats() - 1);
-        int[] playerIndex = new int[2];
-
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    playerIndex[0] = i;
-                    playerIndex[1] = j;
-                    break loop;
-                }
-            }
-        }
-
-        gameStats[playerIndex[0]][playerIndex[1]].addSacrifice();
-    }
-
-    public void addError(Player player) {
-        int[] playerIndex = new int[2];
-
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    playerIndex[0] = i;
-                    playerIndex[1] = j;
-                    break loop;
-                }
-            }
-        }
-
-        gameStats[playerIndex[0]][playerIndex[1]].addError();
-    }
-
-    // manually advance a runner
+    // manually advances a runner
     public void advance(int base, int amount, Player hitter) {
         Player[] tempBases = new Player[3];
         tempBases[0] = bases[0];
@@ -689,8 +589,7 @@ public class Game implements Serializable {
             outs = 0;
             if (inning >= 19 && (score[0] != score[1]) && inning % 2 == 1) {
                 hasFinished = true;
-            }
-            else {
+            } else {
                 if (currentTeamPitchingIndex == 1) {
                     currentTeamPitchingIndex = 0;
                 } else currentTeamPitchingIndex = 1;
@@ -700,66 +599,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void awardSave(Player player) {
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    gameStats[i][j].addSave();
-                    break loop;
-                }
-            }
-        }
-    }
-
-    public void awardWin(Player player) {
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    gameStats[i][j].addWin();
-                    break loop;
-                }
-            }
-        }
-    }
-
-    public void awardLoss(Player player) {
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    gameStats[i][j].addLoss();
-                    break loop;
-                }
-            }
-        }
-    }
-
-    public void awardSaveOpportunity(Player player) {
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    gameStats[i][j].addSaveOpportunity();
-                    break loop;
-                }
-            }
-        }
-    }
-
-    public void awardHold(Player player) {
-        loop:
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (lineups.get(i).get(j) == player) {
-                    gameStats[i][j].addHold();
-                    break loop;
-                }
-            }
-        }
-    }
-
+    // contains finishing logic
     public void finishGame() {
         inning--; // in order to make the innings not overflow
 
@@ -805,41 +645,34 @@ public class Game implements Serializable {
     }
 
     // setter methods
-
-
     public void setHasClosed(boolean hasClosed) {
         this.hasClosed = hasClosed;
     }
 
-    public void setHasStarted(boolean hasStarted) {
-        this.hasStarted = hasStarted;
-    }
-
-    public void addTeam() {
-        teams.add(new Team());
-    }
     public void setTeams(ArrayList<Team> teams) {
         this.teams = teams;
     }
+
     public void setTeam(int teamIndex, Team team) {
         teams.set(teamIndex, team);
     }
+
     public void setGameResult(boolean gameResult) {
         this.gameResult = gameResult;
     }
+
     public void setStadium(String stadium) {
         this.stadium = stadium;
     }
+
     public void setTimeOfDay(String timeOfDay) {
         this.timeOfDay = timeOfDay;
     }
+
     public void setStartingPitcher(int teamIndex, Player player) {
         startingPitcher[teamIndex] = player;
     }
 
-    public void setLineups(ArrayList<ArrayList<Player>> lineups) {
-        this.lineups = lineups;
-    }
     public void setPlayerToLineup(Player player, int teamIndex, int playerIndex) {
         lineups.get(teamIndex).set(playerIndex, player);
     }
@@ -848,85 +681,11 @@ public class Game implements Serializable {
         pitchesFirst = bool;
     }
 
-    public void setBases(Player[] bases) {
-        this.bases = bases;
-    }
-
-    public void setBase(int baseIndex, Player player) {
-        this.bases[baseIndex] = player;
-    }
-
-    public void setCurrentBatter(Player currentBatter, int teamIndex) {
-        this.currentBatter[teamIndex] = currentBatter;
-    }
-
-    public void setCurrentBatterIndex(int[] currentBatterIndex) {
-        this.currentBatterIndex = currentBatterIndex;
-    }
-
-    public void setCurrentPitcher(Player currentPitcher, int teamIndex) {
-        this.currentPitcher[teamIndex] = currentPitcher;
-    }
-
-    public void setGameStats(Stats[][] gameStats) {
-        this.gameStats = gameStats;
-    }
-
-    public void setCurrentPitcherIndex(int[] currentPitcherIndex) {
-        this.currentPitcherIndex = currentPitcherIndex;
-    }
-
-    public void setHasFinished(boolean hasFinished) {
-        this.hasFinished = hasFinished;
-    }
-
-    public void setInning(int inning) {
-        this.inning = inning;
-    }
-
-    public void setOuts(int outs) {
-        this.outs = outs;
-    }
-
-    public void setScore(int[] score) {
-        this.score = score;
-    }
-
-    public void setStartingPitcher(Player[] startingPitcher) {
-        this.startingPitcher = startingPitcher;
-    }
-
-    public void setCurrentPitcher(Player[] currentPitcher) {
-        this.currentPitcher = currentPitcher;
-    }
-
-    public void setCurrentBatter(Player[] currentBatter) {
-        this.currentBatter = currentBatter;
-    }
-
-    public void setCurrentTeamPitchingIndex(int currentTeamPitchingIndex) {
-        this.currentTeamPitchingIndex = currentTeamPitchingIndex;
-    }
-
-    public void setHasErrors(boolean[] hasErrors) {
-        this.hasErrors = hasErrors;
-    }
-
-    public void setHasError(int teamIndex, boolean bool) {
-        this.hasErrors[teamIndex] = bool;
-    }
-
-    public void setEarnedBases(Player[] earnedBases) {
-        this.earnedBases = earnedBases;
-    }
-
     public void setEarnedBase(int baseIndex, Player player) {
         this.earnedBases[baseIndex] = player;
     }
 
     // getter methods
-
-
     public boolean isHasClosed() {
         return hasClosed;
     }
@@ -938,24 +697,25 @@ public class Game implements Serializable {
     public ArrayList<Team> getTeams() {
         return teams;
     }
+
     public Team getTeam(int teamIndex) {
         return teams.get(teamIndex);
     }
+
     public String getStadium() {
         return stadium;
     }
+
     public String getTimeOfDay() {
         return timeOfDay;
     }
+
     public Player getStartingPitcher(int teamIndex) {
         return startingPitcher[teamIndex];
     }
+
     public ArrayList<ArrayList<Player>> getLineups() {
         return lineups;
-    }
-
-    public Player getPlayerFromLineup(int teamIndex, int lineupIndex) {
-        return lineups.get(teamIndex).get(lineupIndex);
     }
 
     public boolean isPitchesFirst() {
@@ -1014,20 +774,8 @@ public class Game implements Serializable {
         return bases;
     }
 
-    public Player[] getStartingPitcher() {
-        return startingPitcher;
-    }
-
     public int getCurrentTeamPitchingIndex() {
         return currentTeamPitchingIndex;
-    }
-
-    public boolean[] getHasErrors() {
-        return hasErrors;
-    }
-
-    public Player[] getEarnedBases() {
-        return earnedBases;
     }
 
     // Team-specific setter methods

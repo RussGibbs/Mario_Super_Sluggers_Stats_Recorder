@@ -1,15 +1,21 @@
 import java.io.*;
 
+
+// class DataReader is the required script to view the saved data from a given season
 public class DataReader {
+    // method to run which is the launch point to create "seasonData.csv"
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         AllFiles allFiles = AppFrame.loadFromFile("seasons.xml");
         seasonData(allFiles.getSeason(0));
     }
 
-    public static void seasonData(Season season) throws FileNotFoundException {
+    // contains required code to create "seasonData.csv"
+    public static void seasonData(Season season) {
         File file = new File("seasonData.csv");
         try {
-            file.delete();
+            if (!file.delete()) {
+                System.out.println("File not deleted. File does not yet exist");
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
