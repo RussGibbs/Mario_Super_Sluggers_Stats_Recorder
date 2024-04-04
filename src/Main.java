@@ -6,7 +6,18 @@ public class Main {
         new AppFrame();
     }
 
-    // fix stats
-    // add stats viewer to season page
-    // add editable stats viewer to game page
+    // fix nextBatter for other
+    // fix plateAppearances
+
+    // things to add
+    // double play button
+    // advanced stats
+    // stadium specifics sorting
+    // loading lineups
+    // add spreadsheet to the gui
+    // undo
+
+
+    // add outs to Hitter stats
+    // home runs add home run earned to the pitcher
 }

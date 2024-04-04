@@ -467,7 +467,7 @@ public class Stats implements Serializable {
     }
 
     public void addInningPitched() {
-        if (inningsPitched % 1 == 0 || inningsPitched % 1 == 0.1) {
+        if (inningsPitched % 1 <= 0.11 || inningsPitched % 1 >= 0.99) {
             inningsPitched += 0.1;
         }
         else {

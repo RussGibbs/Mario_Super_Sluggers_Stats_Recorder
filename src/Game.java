@@ -149,6 +149,7 @@ public class Game implements Serializable {
             case 0 -> {
                 outs++;
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addInningPitched();
+                System.out.println(gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].getInningsPitched());
                 nextBatter(currentTeamPitchingIndex == 1 ? 0 : 1);
                 if (outs == 3) {
                     inning++;
@@ -328,6 +329,7 @@ public class Game implements Serializable {
         // update stats
         outs++;
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addInningPitched();
+        System.out.println(gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].getInningsPitched());
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addStrikeOut();
         gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].addStrikeout();
 
@@ -677,6 +679,7 @@ public class Game implements Serializable {
 
         outs++;
         gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addInningPitched();
+        System.out.println(gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].getInningsPitched());
         if (outs == 3) {
             inning++;
             outs = 0;

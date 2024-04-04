@@ -1365,7 +1365,6 @@ public class AppFrame extends JFrame implements ActionListener {
         if (advanceBattingOrder == null) {
             advanceBattingOrder = new JCheckBox("Advance Batting Order");
             advanceBattingOrder.addActionListener(this);
-            advanceBattingOrder.setSelected(true);
         }
         advanceBattingOrderPanel.add(advanceBattingOrder);
 
@@ -1841,6 +1840,37 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     public void saveOther() {
+        if (advanceBattingOrder.isSelected()) {
+            currentGame.nextBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
+        }
+
+        if (firstBaseOut.isSelected()) {
+            if (caughtStealing1.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
+                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
+                        .indexOf(currentGame.getBases()[0])].addCaughtStealing();
+            }
+            currentGame.remove(0);
+        }
+
+        if (secondBaseOut.isSelected()) {
+            if (caughtStealing2.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
+                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
+                        .indexOf(currentGame.getBases()[1])].addCaughtStealing();
+            }
+            currentGame.remove(1);
+        }
+
+        if (thirdBaseOut.isSelected()) {
+            if (caughtStealing3.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
+                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
+                        .indexOf(currentGame.getBases()[2])].addCaughtStealing();
+            }
+            currentGame.remove(2);
+        }
+
         if (error.isSelected() && !hazard.isSelected()) {
             currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                     [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex())
@@ -1914,33 +1944,6 @@ public class AppFrame extends JFrame implements ActionListener {
             }
         }
 
-        if (firstBaseOut.isSelected()) {
-            if (caughtStealing1.isSelected()) {
-                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
-                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
-                        .indexOf(currentGame.getBases()[0])].addCaughtStealing();
-            }
-            currentGame.remove(0);
-        }
-
-        if (secondBaseOut.isSelected()) {
-            if (caughtStealing2.isSelected()) {
-                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
-                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
-                        .indexOf(currentGame.getBases()[1])].addCaughtStealing();
-            }
-            currentGame.remove(1);
-        }
-
-        if (thirdBaseOut.isSelected()) {
-            if (caughtStealing3.isSelected()) {
-                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]
-                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0)
-                        .indexOf(currentGame.getBases()[2])].addCaughtStealing();
-            }
-            currentGame.remove(2);
-        }
-
         if (hitPitcher.isSelected()) {
             currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                     [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addPitcherHit();
@@ -1982,10 +1985,6 @@ public class AppFrame extends JFrame implements ActionListener {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addPitcherWalk();
             }
-        }
-
-        if (advanceBattingOrder.isSelected()) {
-            currentGame.nextBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
         }
     }
     @Override
@@ -2501,6 +2500,7 @@ public class AppFrame extends JFrame implements ActionListener {
             mainPanel.setVisible(false);
             saveGameClose();
             currentGame.setHasClosed(true);
+            save();
             loadGame(currentGame, "Game " + (currentSeason.getGames().indexOf(currentGame) + 1));
         }
 
