@@ -146,7 +146,7 @@ public class Game implements Serializable {
                 if (outs == 3) {
                     inning++;
                     outs = 0;
-                    if (inning >= 19 && (score[0] != score[1]) && inning % 2 == 1) {
+                    if ((inning >= 19 && score[0] != score[1] && inning % 2 == 1) || (inning >= 18 && score[pitchesFirst ? 0 : 1] > score[pitchesFirst ? 1 : 0])) {
                         hasFinished = true;
                     }
                     else {
@@ -311,7 +311,7 @@ public class Game implements Serializable {
         if (outs == 3) {
             inning++;
             outs = 0;
-            if (inning >= 19 && (score[0] != score[1]) && inning % 2 == 1) {
+            if ((inning >= 19 && score[0] != score[1] && inning % 2 == 1) || (inning >= 18 && score[pitchesFirst ? 0 : 1] > score[pitchesFirst ? 1 : 0])) {
                 hasFinished = true;
             }
             else {
@@ -387,6 +387,11 @@ public class Game implements Serializable {
         // give rbi to hitter
         if (hitter != null) {
             gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][lineups.get(currentTeamPitchingIndex == 0 ? 1 : 0).indexOf(hitter)].addRbi();
+        }
+
+        // finish the game if it is a walk off score
+        if ((inning >= 18 && score[pitchesFirst ? 0 : 1] > score[pitchesFirst ? 1 : 0]) && inning % 2 == 0) {
+            hasFinished = true;
         }
     }
 
@@ -587,7 +592,7 @@ public class Game implements Serializable {
         if (outs == 3) {
             inning++;
             outs = 0;
-            if (inning >= 19 && (score[0] != score[1]) && inning % 2 == 1) {
+            if ((inning >= 19 && score[0] != score[1] && inning % 2 == 1) || (inning >= 18 && score[pitchesFirst ? 1 : 0] > score[pitchesFirst ? 0 : 1])) {
                 hasFinished = true;
             } else {
                 if (currentTeamPitchingIndex == 1) {
