@@ -1,15 +1,21 @@
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
+
+// class PlayerTableModel handles the model for the display of rosters
 public class PlayerTableModel extends AbstractTableModel {
+    // attributes
     private final List<Player> playerList;
     private final String[] columnNames = new String[] {"Player Name", "Position", "Pitch"};
     private final Class[] columnClass = new Class[] {String.class, String.class, String.class};
 
+    // constructor
     public PlayerTableModel(List<Player> playerList) {
         this.playerList = playerList;
     }
 
+
+    // methods
     @Override
     public String getColumnName(int column) {
         return columnNames[column];

@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Mario Super Sluggers Stats Recorder:jar2" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d5d1725-5e12-4b76-bcbc-24f0712dc230" name="Changes" comment="final">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Mario_Super_Sluggers_Stats_Recorder_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/AllFiles.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/AppFrame.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/DataReader.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Game.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Main.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Player.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlayerTableModel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Season.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Stats.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Team.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/seasonData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/seasonData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/seasons.xml" beforeDir="false" afterPath="$PROJECT_DIR$/seasons.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/seasonData.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/seasons.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,9 +56,19 @@
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="DataReader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="DataReader" />
@@ -151,7 +177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1712216731509</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="final">
+      <created>1712239476903</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1712239476903</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
