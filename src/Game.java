@@ -16,6 +16,7 @@ public class Game implements Serializable {
     private boolean hasStarted;
     private boolean hasFinished;
     private boolean hasClosed;
+    private boolean[] isPerfectGame;
     private int inning;
     private int outs;
     private final int[] score;
@@ -51,6 +52,9 @@ public class Game implements Serializable {
         hasStarted = false;
         hasFinished = false;
         hasClosed = false;
+        isPerfectGame = new boolean[2];
+        isPerfectGame[0] = true;
+        isPerfectGame[1] = true;
         pitchesFirst = true;
         inning = 1;
         outs = 0;
@@ -343,29 +347,7 @@ public class Game implements Serializable {
                 gameStats[currentTeamPitchingIndex == 0 ? 1 : 0][currentBatterIndex[currentTeamPitchingIndex == 0 ? 1 : 0]].getAtBats() - 1);
 
         // update the bases
-        Player[] tempBases = new Player[3];
-        tempBases[0] = bases[0];
-        tempBases[1] = bases[1];
-        tempBases[2] = bases[2];
-
-        Player[] tempEarnedBases = new Player[3];
-        tempEarnedBases[0] = earnedBases[0];
-        tempEarnedBases[1] = earnedBases[1];
-        tempEarnedBases[2] = earnedBases[2];
-
-        bases[0] = currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0];
-        earnedBases[0] = currentPitcher[currentTeamPitchingIndex];
-        if (tempBases[0] != null) {
-            bases[1] = tempBases[0];
-            earnedBases[1] = tempEarnedBases[0];
-            if (tempBases[1] != null) {
-                bases[2] = tempBases[1];
-                earnedBases[2] = tempEarnedBases[1];
-                if (tempBases[2] != null) {
-                    score(tempBases[2], tempEarnedBases[2], currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
-                }
-            }
-        }
+        advance(-1, 1, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0], currentPitcher[currentTeamPitchingIndex]);
 
         // advance the batter
         nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
@@ -415,6 +397,7 @@ public class Game implements Serializable {
 
     // manually advances a runner
     public void advance(int base, int amount, Player hitter, Player pitcher) {
+        isPerfectGame[currentTeamPitchingIndex] = false;
         Player[] tempBases = new Player[3];
         tempBases[0] = bases[0];
         tempBases[1] = bases[1];
@@ -638,8 +621,8 @@ public class Game implements Serializable {
             }
 
             // perfect games
-            if (score[i == 0 ? 1 : 0] == 0) {
-                gameStats[i][currentPitcherIndex[i]].addShutOut();
+            if (isPerfectGame[i] && gameStats[i][currentPitcherIndex[i]].getCompleteGames() == 1) {
+                gameStats[i][currentPitcherIndex[i]].addPerfectGame();
             }
         }
 

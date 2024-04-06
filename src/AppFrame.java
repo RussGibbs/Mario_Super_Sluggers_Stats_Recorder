@@ -1841,6 +1841,7 @@ public class AppFrame extends JFrame implements ActionListener {
     public void saveOther() {
         Player pitcher = currentGame.getCurrentPitcher(currentGame.getCurrentTeamPitchingIndex());
         Player hitter = currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
+        boolean hasAdvanced = false;
 
         if (firstBaseOut.isSelected()) {
             if (caughtStealing1.isSelected()) {
@@ -1968,10 +1969,12 @@ public class AppFrame extends JFrame implements ActionListener {
 
         if (outCheckBox.isSelected()) {
             currentGame.hitAdvance(0);
+            hasAdvanced = true;
         }
 
         if (strikeoutCheckBox.isSelected()) {
             currentGame.strikeOut();
+            hasAdvanced = true;
         }
 
         if (hitPitcher.isSelected()) {
@@ -1984,7 +1987,7 @@ public class AppFrame extends JFrame implements ActionListener {
             }
         }
 
-        if (advanceBattingOrder.isSelected()) {
+        if (advanceBattingOrder.isSelected() && !hasAdvanced) {
             currentGame.nextBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
         }
     }
