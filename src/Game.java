@@ -240,7 +240,7 @@ public class Game implements Serializable {
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
 
                 // update the bases
-                advance(-1, 3, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
+                advance(-1, 3, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0], currentPitcher[currentTeamPitchingIndex]);
 
                 nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
             }
@@ -256,7 +256,7 @@ public class Game implements Serializable {
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addEarnedRun();
 
                 // advance since as is the same for either runner advance style
-                advance(-1, 4, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
+                advance(-1, 4, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0], currentPitcher[currentTeamPitchingIndex]);
 
                 nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
             }
@@ -276,7 +276,7 @@ public class Game implements Serializable {
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
 
                 // advance
-                advance(-1, 1, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
+                advance(-1, 1, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0], currentPitcher[currentTeamPitchingIndex]);
 
                 nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
             }
@@ -291,7 +291,7 @@ public class Game implements Serializable {
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
 
                 // advance
-                advance(-1, 2, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
+                advance(-1, 2, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0], currentPitcher[currentTeamPitchingIndex]);
 
                 nextBatter(currentTeamPitchingIndex == 0 ? 1 : 0);
             }
@@ -414,7 +414,7 @@ public class Game implements Serializable {
     }
 
     // manually advances a runner
-    public void advance(int base, int amount, Player hitter) {
+    public void advance(int base, int amount, Player hitter, Player pitcher) {
         Player[] tempBases = new Player[3];
         tempBases[0] = bases[0];
         tempBases[1] = bases[1];
@@ -428,8 +428,8 @@ public class Game implements Serializable {
         if (base == -1) {
             // update the bases
             if (amount == 1) {
-                bases[0] = currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0];
-                earnedBases[0] = currentPitcher[currentTeamPitchingIndex];
+                bases[0] = hitter;
+                earnedBases[0] = pitcher;
                 if (tempBases[0] != null) {
                     bases[1] = tempBases[0];
                     earnedBases[1] = tempEarnedBases[0];
@@ -437,7 +437,7 @@ public class Game implements Serializable {
                         bases[2] = tempBases[1];
                         earnedBases[2] = tempEarnedBases[1];
                         if (tempBases[2] != null) {
-                            score(tempBases[2], tempEarnedBases[2], currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0]);
+                            score(tempBases[2], tempEarnedBases[2], hitter);
                         }
                     }
                 }
@@ -445,8 +445,8 @@ public class Game implements Serializable {
             else if (amount == 2) {
                 bases[0] = null;
                 earnedBases[0] = null;
-                bases[1] = currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0];
-                earnedBases[1] = currentPitcher[currentTeamPitchingIndex];
+                bases[1] = hitter;
+                earnedBases[1] = pitcher;
                 if (tempBases[0] != null) {
                     bases[2] = tempBases[0];
                     earnedBases[2] = tempEarnedBases[0];
@@ -472,8 +472,8 @@ public class Game implements Serializable {
                 earnedBases[0] = null;
                 bases[1] = null;
                 earnedBases[1] = null;
-                bases[2] = currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0];
-                earnedBases[2] = currentPitcher[currentTeamPitchingIndex];
+                bases[2] = hitter;
+                earnedBases[2] = pitcher;
                 if (tempBases[0] != null) {
                     score(tempBases[0], tempEarnedBases[0], hitter);
                 }
@@ -498,7 +498,7 @@ public class Game implements Serializable {
                 }
 
                 // score the hitter
-                score(hitter, tempEarnedBases[2], hitter);
+                score(hitter, pitcher, hitter);
             }
         }
         else if (base == 0) {

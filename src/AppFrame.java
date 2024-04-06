@@ -1531,6 +1531,7 @@ public class AppFrame extends JFrame implements ActionListener {
         if (advanceBatter.getValue().equals("4")) {
             if (earnedRun1 == null) {
                 earnedRun1 = new JCheckBox("Earned Run");
+                earnedRun1.setSelected(true);
                 earnedRun1.addActionListener(this);
             }
             batterPanelLower.add(spacer6);
@@ -1592,6 +1593,7 @@ public class AppFrame extends JFrame implements ActionListener {
         if (advanceFirst.getValue().toString().compareTo("2") > 0) {
             if (earnedRun2 == null) {
                 earnedRun2 = new JCheckBox("Earned Run");
+                earnedRun2.setSelected(true);
                 earnedRun2.addActionListener(this);
             }
             firstPanelLower.add(spacer8);
@@ -1667,6 +1669,7 @@ public class AppFrame extends JFrame implements ActionListener {
         if (advanceSecond.getValue().toString().compareTo("1") > 0) {
             if (earnedRun3 == null) {
                 earnedRun3 = new JCheckBox("Earned Run");
+                earnedRun3.setSelected(true);
                 earnedRun3.addActionListener(this);
             }
             secondPanelLower.add(spacer10);
@@ -1740,6 +1743,7 @@ public class AppFrame extends JFrame implements ActionListener {
         if (advanceThird.getValue().toString().compareTo("0") > 0) {
             if (earnedRun4 == null) {
                 earnedRun4 = new JCheckBox("Earned Run");
+                earnedRun4.setSelected(true);
                 earnedRun4.addActionListener(this);
             }
             thirdPanelLower.add(spacer12);
@@ -1835,9 +1839,8 @@ public class AppFrame extends JFrame implements ActionListener {
 
     // applies data from custom play menu to interactive game simulation
     public void saveOther() {
-        if (advanceBattingOrder.isSelected()) {
-            currentGame.nextBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
-        }
+        Player pitcher = currentGame.getCurrentPitcher(currentGame.getCurrentTeamPitchingIndex());
+        Player hitter = currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
 
         if (firstBaseOut.isSelected()) {
             if (caughtStealing1.isSelected()) {
@@ -1866,10 +1869,13 @@ public class AppFrame extends JFrame implements ActionListener {
             currentGame.remove(2);
         }
 
-        if (error.isSelected() && !hazard.isSelected()) {
-            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
-                    [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex())
-                    .indexOf((Player) errorBox.getSelectedItem())].addError();
+        if (error.isSelected()) {
+            pitcher = null;
+            if (!hazard.isSelected()) {
+                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                        [currentGame.getLineups().get(currentGame.getCurrentTeamPitchingIndex())
+                        .indexOf((Player) errorBox.getSelectedItem())].addError();
+            }
         }
 
         if (steal.isSelected()) {
@@ -1883,70 +1889,6 @@ public class AppFrame extends JFrame implements ActionListener {
                     [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addSacrifice();
             currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                     [currentGame.getCurrentBatterIndex()[currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0]].addAtBats(-1);
-        }
-
-        if (hitBatter.isSelected()) {
-            currentGame.advance(2, Integer.parseInt((String) advanceThird.getValue()),
-                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
-            currentGame.advance(1, Integer.parseInt((String) advanceSecond.getValue()),
-                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
-            currentGame.advance(0, Integer.parseInt((String) advanceFirst.getValue()),
-                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
-            currentGame.advance(-1, Integer.parseInt((String) advanceBatter.getValue()),
-                    currentGame.getCurrentBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0));
-        }
-
-        else {
-            currentGame.advance(2, Integer.parseInt((String) advanceThird.getValue()), null);
-            currentGame.advance(1, Integer.parseInt((String) advanceSecond.getValue()), null);
-            currentGame.advance(0, Integer.parseInt((String) advanceFirst.getValue()), null);
-            currentGame.advance(-1, Integer.parseInt((String) advanceBatter.getValue()), null);
-        }
-
-        if (outCheckBox.isSelected()) {
-            currentGame.hitAdvance(0);
-        }
-
-        if (strikeoutCheckBox.isSelected()) {
-            currentGame.strikeOut();
-        }
-
-        if (earnedRun1 != null) {
-            if (!earnedRun1.isSelected()) {
-                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
-                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
-            }
-        }
-
-        if (earnedRun2 != null) {
-            if (!earnedRun2.isSelected()) {
-                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
-                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
-            }
-        }
-
-        if (earnedRun3 != null) {
-            if (!earnedRun3.isSelected()) {
-                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
-                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
-            }
-        }
-
-        if (earnedRun4 != null) {
-            if (!earnedRun4.isSelected()) {
-                currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
-                        [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addEarnedRuns(-1);
-            }
-        }
-
-        if (hitPitcher.isSelected()) {
-            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
-                    [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addPitcherHit();
-        }
-        else {
-            if (!"0".equals(advanceBatter.getValue()) && !"4".equals(advanceBatter.getValue())) {
-                currentGame.setEarnedBase(Integer.parseInt((String) advanceBatter.getValue()) - 1, null);
-            }
         }
 
         if (hitBatter.isSelected()) {
@@ -1990,6 +1932,60 @@ public class AppFrame extends JFrame implements ActionListener {
                 currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
                         [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addPitcherWalk();
             }
+        }
+        else {
+            hitter = null;
+        }
+
+        if (earnedRun1 != null) {
+            if (!earnedRun1.isSelected()) {
+                pitcher = null;
+            }
+        }
+
+        if (earnedRun2 != null) {
+            if (!earnedRun2.isSelected()) {
+                currentGame.setEarnedBase(0, null);
+            }
+        }
+
+        if (earnedRun3 != null) {
+            if (!earnedRun3.isSelected()) {
+                currentGame.setEarnedBase(1, null);
+            }
+        }
+
+        if (earnedRun4 != null) {
+            if (!earnedRun4.isSelected()) {
+                currentGame.setEarnedBase(2, null);
+            }
+        }
+
+        currentGame.advance(2, Integer.parseInt((String) advanceThird.getValue()), hitter, pitcher);
+        currentGame.advance(1, Integer.parseInt((String) advanceSecond.getValue()), hitter, pitcher);
+        currentGame.advance(0, Integer.parseInt((String) advanceFirst.getValue()), hitter, pitcher);
+        currentGame.advance(-1, Integer.parseInt((String) advanceBatter.getValue()), hitter, pitcher);
+
+        if (outCheckBox.isSelected()) {
+            currentGame.hitAdvance(0);
+        }
+
+        if (strikeoutCheckBox.isSelected()) {
+            currentGame.strikeOut();
+        }
+
+        if (hitPitcher.isSelected()) {
+            currentGame.getGameStats()[currentGame.getCurrentTeamPitchingIndex()]
+                    [currentGame.getCurrentPitcherIndex()[currentGame.getCurrentTeamPitchingIndex()]].addPitcherHit();
+        }
+        else {
+            if (!"0".equals(advanceBatter.getValue()) && !"4".equals(advanceBatter.getValue())) {
+                currentGame.setEarnedBase(Integer.parseInt((String) advanceBatter.getValue()) - 1, null);
+            }
+        }
+
+        if (advanceBattingOrder.isSelected()) {
+            currentGame.nextBatter(currentGame.getCurrentTeamPitchingIndex() == 0 ? 1 : 0);
         }
     }
 
