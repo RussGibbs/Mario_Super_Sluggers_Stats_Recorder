@@ -25,4 +25,3 @@ public class AllFiles implements Serializable {
         return seasons.get(seasonIndex);
     }
 }
-

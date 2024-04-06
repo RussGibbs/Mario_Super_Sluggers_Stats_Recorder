@@ -825,4 +825,3 @@ public class Game implements Serializable {
         return teams.get(teamIndex).getDefensePosition(playerIndex);
     }
 }
-

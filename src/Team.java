@@ -56,4 +56,3 @@ public class Team implements Serializable {
         return players.get(playerIndex).getDefensePosition();
     }
 }
-

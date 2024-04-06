@@ -134,4 +134,3 @@ public class Player implements Serializable {
         this.stats.addGamesFinished(-stats.getGamesFinished());
     }
 }
-

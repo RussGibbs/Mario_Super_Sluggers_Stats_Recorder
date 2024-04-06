@@ -47,4 +47,3 @@ public class Season implements Serializable {
         return games.get(gameIndex).getTeam(teamIndex);
     }
 }
-
