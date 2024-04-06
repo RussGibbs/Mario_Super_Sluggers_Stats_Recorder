@@ -257,7 +257,6 @@ public class Game implements Serializable {
                 // give the pitcher a hit and a home run allowed
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addPitcherHit();
                 gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addHomeRunAllowed();
-                gameStats[currentTeamPitchingIndex][currentPitcherIndex[currentTeamPitchingIndex]].addEarnedRun();
 
                 // advance since as is the same for either runner advance style
                 advance(-1, 4, currentBatter[currentTeamPitchingIndex == 0 ? 1 : 0], currentPitcher[currentTeamPitchingIndex]);

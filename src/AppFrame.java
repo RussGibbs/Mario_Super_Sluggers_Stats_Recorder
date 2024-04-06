@@ -2077,12 +2077,14 @@ public class AppFrame extends JFrame implements ActionListener {
         if (e.getSource() == deleteGameYes) {
             mainPanel.setVisible(false);
 
-            for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
-                currentGame.getLineups().get(0).get(i).removeStats(currentGame.getGameStats()[0][i]);
-            }
+            if (currentGame.isHasFinished()) {
+                for (int i = 0; i < currentGame.getLineups().get(0).size(); i++) {
+                    currentGame.getLineups().get(0).get(i).removeStats(currentGame.getGameStats()[0][i]);
+                }
 
-            for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
-                currentGame.getLineups().get(1).get(i).removeStats(currentGame.getGameStats()[1][i]);
+                for (int i = 0; i < currentGame.getLineups().get(1).size(); i++) {
+                    currentGame.getLineups().get(1).get(i).removeStats(currentGame.getGameStats()[1][i]);
+                }
             }
 
             currentSeason.getGames().remove(currentGame);
